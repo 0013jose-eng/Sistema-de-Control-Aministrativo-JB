@@ -46,13 +46,13 @@ input:focus, select:focus{border-color:var(--accent);}
 .tile.effect-drop::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:50px;height:50px;border-radius:100%;background:radial-gradient(circle,#00b1ca33 0%,#b9efe900 90%);animation:dropRipple .62s cubic-bezier(.3,2.7,.29,-1.3);z-index:2;pointer-events:none;}
 @keyframes dropRipple{0%{opacity:1;width:60px;height:60px;}75%{opacity:.6;width:180px;height:180px;}100%{opacity:0;width:260px;height:260px;}}
 .tile.tile-blue{background:linear-gradient(135deg,var(--tileblue) 72%,#234cc7 100%);}
-.tile.tile-pink{background:linear-gradient(135deg,var(--tilepink) 72%,#921b57 100%);}
 .tile.tile-green{background:linear-gradient(135deg,var(--tilegreen) 72%,#107ea0 100%);}
+.tile.tile-pink{background:linear-gradient(135deg,var(--tilepink) 72%,#921b57 100%);}
 .tile.tile-orange{background:linear-gradient(135deg,var(--tileorange) 70%,#a6521b 100%);}
 .tile.tile-gray{background:var(--tile-gray);}
 .ia-panel-chat-box{margin-top:30px;width:90%;max-width:700px;background:#182940b2;border-radius:17px;border:1.7px solid #29ffe497;box-shadow:0 2px 18px #00e7ff34;padding:20px;}
 .ia-panel-chat-box .msg{font-size:1.05rem;}
-/* RELOJ ANALOGICO */
+/* RELOJ ANALOGICO CORREGIDO */
 #corner-clock-wrap{position:fixed;top:24px;right:37px;z-index:60;display:none;flex-direction:column;align-items:center;background:rgba(50,68,120,0.09);border-radius:18px;box-shadow:0 0 24px #00222b34;padding:17px 22px 10px;}
 #corner-clock{width:150px;height:150px;background:radial-gradient(ellipse 120% 108% at 50% 60%,#54fff661 0,#30405645 76%,transparent 90%);border-radius:50%;position:relative;box-shadow:0 0 20px #00e0ffaa;border:3.5px solid #2df8ffa4;margin-bottom:7px;overflow:visible;z-index:5;}
 .clock-needle{position:absolute;left:50%;top:50%;transform:translate(-50%,-100%);transform-origin:50% 99.1%;background:linear-gradient(90deg,#b5fcffef 33%,#2df8ffb3 100%);border-radius:6px;}
@@ -61,7 +61,7 @@ input:focus, select:focus{border-color:var(--accent);}
 .clock-sec{width:2.1px;height:81px;background:linear-gradient(90deg,#55e0fd 43%,#e0ceed 90%);}
 .clock-center{width:19px;height:19px;background:linear-gradient(135deg,#47eee7,#013d65 90%);border-radius:99px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 10px #00e7f977;z-index:2;}
 .clock-romans{position:absolute;left:0;top:0;width:100%;height:100%;z-index:10;color:#ffe;font-family:Georgia,serif;font-size:1.13rem;text-shadow:0 2px 6px #26385c70;pointer-events:none;}
-.clock-romans span{position:absolute;}
+.clock-romans span{position:absolute; white-space: nowrap;}
 #clock-date{margin-top:7px;color:#c6e2e6;font-size:1rem;letter-spacing:.5px;text-shadow:0 0 3px #145;}
 #cuckoo-audio,#tick-audio{display:none;}
 /* Chat IT */
@@ -72,20 +72,21 @@ input:focus, select:focus{border-color:var(--accent);}
 .msg.it{background:#1f242c;align-self:flex-start;border-left:4px solid var(--accent);border-bottom-left-radius:2px;}
 .msg.system{background:transparent;align-self:center;font-style:italic;font-size:0.9rem;color:#8892b0;text-align:center;border:none;padding:4px;}
 #typing-indicator{padding:0 11px 6px;font-size:.88rem;color:var(--accent);font-style:italic;display:none;}
-@media (max-width:1000px){
-  .login-card{width:97vw;max-width:350px;flex-direction:column;gap:13px;padding:14px;}
-  #corner-clock-wrap{right:2vw;top:15px;padding:9px 2vw;}
-  #corner-clock{width:97px;height:97px;}
-  #chat-window{width:96vw;max-width:310px;right:2vw;}
+
+/* Busca tu sección de media queries al final del CSS y reemplaza/agrega esto */
+@media (max-width: 1000px) {
+  #corner-clock-wrap { right: 5px; top: 10px; transform: scale(0.85); }
 }
-@media (max-width:600px){
-  .login-card{width:100vw;max-width:none;border-radius:4px;box-shadow:none;padding:9px;font-size:.92rem;}
-  .avatar-box{width:55px;height:55px;}
-  #corner-clock-wrap{right:0;top:5vw;padding:5px 1vw;}
-  #corner-clock{width:65px;height:65px;}
-  .tiles-row{flex-direction:column;gap:12px;}
-  .tile{min-width:unset;min-height:58px;padding:8px 4px 7px 8px;font-size:.99rem;border-radius:8px;}
-  .tile .tile-icon{font-size:1.05rem;}
+
+@media (max-width: 600px) {
+  #corner-clock-wrap { 
+    right: -10px; 
+    top: 5px; 
+    transform: scale(0.60); /* Se encoge proporcionalmente sin romperse */
+    transform-origin: right top;
+  }
+  .tiles-row { flex-direction: column; gap: 12px; align-items: center; }
+  .tile { min-width: 90%; min-height: 60px; padding: 10px; }
 }
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 </style>
@@ -177,7 +178,7 @@ const i18n = {
       pinShort:"IA: El PIN debe ser un número de 6 dígitos.", pinNotNumber:"IA: El PIN solo puede contener números (0-9).",
       recoverBtn:"RECUPERAR CREDENCIALES", showPin:"Mostrar PIN", hidePin:"Ocultar PIN",welcome:"¡Bienvenido, Jose Alfredo!",verified:"Acceso al Sistema JABM verificado correctamente.",
       roleLabel:"Rol: <b>QA Auditor & Administrador</b>",manos:"Manos a la obra",panelHeader:"Sistema Compacto de trabajo (Panel de control)",almuerzo:"Alarma de Almuerzo",salida:"Alarma de Salida",
-      cumple:"Cumpleaños",ia:"IA de Asistencia",iaChatPanel:"¡Bienvenido al panel de control! Aquí tienes tus alarmas y recordatorios activos.<br>La IA te avisará 10 minutos antes de tu hora de almuerzo y salida.<br><br><i>(Puedes expandir las funciones de IA y alarmas aquí...)</i>",
+      cumple:"Cumpleaños",ia:"IA de Asistencia",iaChatPanel:"¡Bienvenido al panel de control! Aquí tienes tus alarmas y recordatorios activos.<br>La IA te avisará 10 minutos antes de tu hora de almuerzo y salida.",
       cumpleHoy:"🎂 Hoy cumpleaños: ",cumpleNext:"🎉 Próximo cumpleaños: ",proximoEn:"en",dias:"días"
   },
   en: {
@@ -186,7 +187,7 @@ const i18n = {
       pinShort:"AI: The PIN must be a 6-digit number.",pinNotNumber:"AI: PIN can only contain numbers (0-9).",
       recoverBtn:"RECOVER CREDENTIALS",showPin:"Show PIN",hidePin:"Hide PIN",welcome:"Welcome, Jose Alfredo!",verified:"Access to JABM System successfully verified.",
       roleLabel:"Role: <b>QA Auditor & Administrator</b>",manos:"Let's go",panelHeader:"Work Compact System (Control Panel)",almuerzo:"Lunch Alarm",salida:"End-of-day Alarm",cumple:"Birthday",ia:"Support AI",
-      iaChatPanel:"Welcome to the control panel! Here you have your active alarms and reminders.<br>The AI will remind you 10 minutes before your lunch and end time.<br><br><i>(You can expand IA/alarms features here...)</i>",
+      iaChatPanel:"Welcome to the control panel! Here you have your active alarms and reminders.<br>The AI will remind you 10 minutes before your lunch and end time.",
       cumpleHoy:"🎂 Birthday today: ",cumpleNext:"🎉 Next birthday: ",proximoEn:"in",dias:"days"
   }
 };
@@ -197,6 +198,9 @@ const BIRTHDAYS = [
   { name:"Jose Alfredo",date:"04-21" },
   { name:"Maria Quesada",date:"06-10" }
 ];
+let iaStep = "inicio"; 
+let flowType = "";
+
 window.onload=()=>{
   translateAll();
   showCumpleanos();
@@ -210,6 +214,7 @@ function hidePanelAssets(){
   document.getElementById('chat-window').style.display="none";
 }
 document.getElementById('lang-select').addEventListener('change', function() { currentLang = this.value; translateAll(); showCumpleanos(); });
+
 function translateAll() {
   const lang=currentLang;
   document.getElementById('system-title').textContent=i18n[lang].systemTitle;
@@ -284,14 +289,34 @@ function showWelcomeAssistant(user, name) {
     }</div>`;
   showCumpleanos();
 }
+
+// FUNCIÓN DE PANEL CON LÓGICA DINÁMICA POR DÍA
 function goToPanel() {
   document.getElementById('screen-welcome').classList.remove('active');
   document.getElementById('panel-futurista').classList.add('active');
-  document.getElementById('corner-clock-wrap').style.display="flex";
-  document.getElementById('tile-alm').innerText="12:30";
-  document.getElementById('tile-salida').innerText="18:00";
-  document.getElementById('tile-ia').innerText=currentLang==="es"?"IA activa":"AI active";
-  document.getElementById('ia-panel-chat').innerHTML=`<div class="msg it"><b>IA:</b> ${i18n[currentLang].iaChatPanel}</div>`;
+  document.getElementById('corner-clock-wrap').style.display = "flex";
+  
+  const d = new Date();
+  const diaSemana = d.getDay(); // 0=Dom, 1=Lun, 2=Mar...
+  
+  let horaAlmuerzo = "12:00";
+  let horaSalida = "17:00";
+
+  // Lógica para Lunes a Viernes (incluyendo tu horario especial de Lunes)
+  if (diaSemana >= 1 && diaSemana <= 5) {
+    horaAlmuerzo = "12:30";
+    horaSalida = "18:00";
+  } else if (diaSemana === 6) {
+    horaSalida = "14:00"; // Sábados
+  }
+
+  // Actualizar los textos de las tarjetas
+  document.getElementById('tile-alm').innerText = horaAlmuerzo;
+  document.getElementById('tile-salida').innerText = horaSalida;
+
+  // Notificación de la IA en el panel
+  const mensajeDia = (diaSemana === 1) ? "IA: Iniciando semana. Horario de Lunes activo (12:30 - 18:00)." : "IA: Sistema listo. Horarios cargados.";
+  document.getElementById('ia-panel-chat').innerHTML = `<div class="msg it">${mensajeDia}</div>`;
 }
 function pad(n){return (n<10?"0":"")+n;}
 function showCumpleanos() {
@@ -354,79 +379,51 @@ function playCuckoo(hh){
 }
 function openChat(){document.getElementById('chat-window').style.display='flex';}
 function closeChat(){document.getElementById('chat-window').style.display='none';}
-// Variables de control para el flujo de la IA (Agrégalas al inicio de tu <script>)
+// 1. Pon esto al inicio de tus scripts
 let iaStep = "inicio"; 
-let tempUserFound = "";
-function sendITMsg(){
+// 2. Reemplaza el contenido de tu función sendITMsg
+function sendITMsg() {
   let input = document.getElementById('chat-input');
   let val = input.value.trim(); 
-  if(!val) return;
-  
+  if(!val) return; 
   let box = document.getElementById('chat-box');
   let userDiv = document.createElement('div'); 
   userDiv.className = 'msg user'; 
   userDiv.textContent = val;
   box.appendChild(userDiv); 
   input.value = "";
-  
-  const typing = document.getElementById('typing-indicator');
-  typing.style.display = 'block';
-
-  setTimeout(()=>{
-    typing.style.display = 'none';
+  setTimeout(() => {
     let ia = document.createElement('div'); 
-    ia.className = 'msg it'; 
-    let lowVal = val.toLowerCase();
-    let response = "";
-
-    // --- LÓGICA DE REACCIÓN DINÁMICA ---
-    
+    ia.className = 'msg it';
+    let low = val.toLowerCase();
+    let respuesta = "";
     if(iaStep === "inicio") {
-      if(lowVal.includes("usuario") || lowVal.includes("user")) {
-        response = currentLang === "es" ? "IA: Entendido. Para recuperar su ID, ingrese su Código de Trabajador." : "AI: Please enter your Employee Code to recover your ID.";
+      if(low.includes("pin") || low.includes("olvido")) {
+        respuesta = "IA: Entiendo. Para recuperar su PIN, por favor ingrese su Código de Trabajador.";
         iaStep = "esperando_codigo";
-        flowType = "USER";
-      } else if(lowVal.includes("pin") || lowVal.includes("contraseña")) {
-        response = currentLang === "es" ? "IA: Protocolo de PIN activo. Ingrese su Código de Trabajador." : "AI: PIN Protocol active. Enter your Employee Code.";
-        iaStep = "esperando_codigo";
-        flowType = "PIN";
       } else {
-        response = currentLang === "es" ? "IA: ¿En qué puedo ayudarle? (Usuario / PIN / Soporte)" : "AI: How can I help you? (User / PIN / Support)";
+        respuesta = "IA: ¿En qué puedo ayudarle con el sistema?";
       }
-    } 
-    
-    else if(iaStep === "esperando_codigo") {
-      if(val === DB.emp) { // Valida contra 404471
-        if(flowType === "USER") {
-          response = `IA: Código verificado. Su Usuario es: **${DB.user}**. Acceso concedido.`;
-          iaStep = "inicio";
-        } else {
-          response = currentLang === "es" ? "IA: Código correcto. Pregunta de seguridad: ¿Nombre de su madre?" : "AI: Code correct. Security question: Mother's name?";
-          iaStep = "esperando_seguridad";
-        }
+    } else if(iaStep === "esperando_codigo") {
+      if(val === DB.emp) { // Valida contra tu 404471
+        respuesta = "IA: Código correcto. Por seguridad, ¿cuál es el nombre de su madre?";
+        iaStep = "esperando_seguridad";
       } else {
-        response = "IA: Código incorrecto. Intente de nuevo o contacte a soporte vía Pusher.";
+        respuesta = "IA: El código no coincide. Intente de nuevo o contacte a un supervisor.";
       }
-    }
-
-    else if(iaStep === "esperando_seguridad") {
-      if(lowVal.includes("hilda")) { // Respuesta basada en tu contexto familiar
-        response = `IA: Identidad confirmada. Su PIN es: **${DB.pin}**.`;
+    } else if(iaStep === "esperando_seguridad") {
+      if(low.includes("hilda")) {
+        respuesta = `IA: Identidad confirmada. Su PIN de acceso es: ${DB.pin}. Guarde esta información.`;
         iaStep = "inicio";
       } else {
-        response = "IA: Respuesta incorrecta. Por seguridad, el flujo se ha reiniciado.";
-        iaStep = "inicio";
+        respuesta = "IA: Respuesta de seguridad incorrecta.";
       }
     }
-
-    ia.textContent = response;
-    box.appendChild(ia); 
+    ia.textContent = respuesta;
+    box.appendChild(ia);
     box.scrollTop = box.scrollHeight;
   }, 1000);
-  
-  box.scrollTop = box.scrollHeight;
-}
-  // CONFIGURACIÓN PUSHER (Actualizada)
+}  
 function initPusher() {
   const pusher = new Pusher('53c3a868a60419e3eeb8', { cluster: 'us2' });
   const canalEmpresarial = pusher.subscribe('chat-empresarial');
@@ -441,7 +438,7 @@ function initPusher() {
 }
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./service-worker.js');
-  }
+}
 </script>
 </body>
 </html>
