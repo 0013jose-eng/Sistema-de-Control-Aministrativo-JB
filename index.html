@@ -171,37 +171,42 @@ input:focus, select:focus{border-color:var(--accent);}
   </div>
 </div>
 <script>
+// 1. DICCIONARIO Y CONFIGURACIÓN GLOBAL
 const i18n = {
   es: {
-      systemTitle:"SYSTEM JABM", waiting:"IA: Esperando identificación...",recognized:"IA: Usuario reconocido. Por favor, ingrese su PIN.",
+      systemTitle:"SYSTEM JABM", waiting:"IA: Esperando identificación...",recognized:"IA: Usuario reconocido. Ingrese su PIN.",
       wrongPIN:"IA: PIN incorrecto. Verifique sus datos.",invalidID:"IA: ID inválido detectado.",
-      pinShort:"IA: El PIN debe ser un número de 6 dígitos.", pinNotNumber:"IA: El PIN solo puede contener números (0-9).",
-      recoverBtn:"RECUPERAR CREDENCIALES", showPin:"Mostrar PIN", hidePin:"Ocultar PIN",welcome:"¡Bienvenido, Jose Alfredo!",verified:"Acceso al Sistema JABM verificado correctamente.",
-      roleLabel:"Rol: <b>QA Auditor & Administrador</b>",manos:"Manos a la obra",panelHeader:"Sistema Compacto de trabajo (Panel de control)",almuerzo:"Alarma de Almuerzo",salida:"Alarma de Salida",
-      cumple:"Cumpleaños",ia:"IA de Asistencia",iaChatPanel:"¡Bienvenido al panel de control! Aquí tienes tus alarmas y recordatorios activos.<br>La IA te avisará 10 minutos antes de tu hora de almuerzo y salida.",
-      cumpleHoy:"🎂 Hoy cumpleaños: ",cumpleNext:"🎉 Próximo cumpleaños: ",proximoEn:"en",dias:"días"
+      pinShort:"IA: El PIN debe tener 6 dígitos.", pinNotNumber:"IA: Solo números (0-9).",
+      recoverBtn:"RECUPERAR CREDENCIALES", welcome:"¡Bienvenido, Jose Alfredo!",verified:"Acceso verificado correctamente.",
+      roleLabel:"Rol: <b>QA Auditor & Administrador</b>",manos:"Manos a la obra",
+      panelHeader:"Sistema Compacto de trabajo (Panel de control)",
+      almuerzo:"Alarma de Almuerzo",salida:"Alarma de Salida",cumple:"Cumpleaños",ia:"IA de Asistencia",
+      dias:"días"
   },
   en: {
-      systemTitle:"SYSTEM JABM", waiting:"AI: Waiting for identification...",recognized:"AI: User recognized. Please enter your PIN.",
-      wrongPIN:"AI: Incorrect PIN. Please check your data.",invalidID:"AI: Invalid ID detected.",
-      pinShort:"AI: The PIN must be a 6-digit number.",pinNotNumber:"AI: PIN can only contain numbers (0-9).",
-      recoverBtn:"RECOVER CREDENTIALS",showPin:"Show PIN",hidePin:"Hide PIN",welcome:"Welcome, Jose Alfredo!",verified:"Access to JABM System successfully verified.",
-      roleLabel:"Role: <b>QA Auditor & Administrator</b>",manos:"Let's go",panelHeader:"Work Compact System (Control Panel)",almuerzo:"Lunch Alarm",salida:"End-of-day Alarm",cumple:"Birthday",ia:"Support AI",
-      iaChatPanel:"Welcome to the control panel! Here you have your active alarms and reminders.<br>The AI will remind you 10 minutes before your lunch and end time.",
-      cumpleHoy:"🎂 Birthday today: ",cumpleNext:"🎉 Next birthday: ",proximoEn:"in",dias:"days"
+      systemTitle:"SYSTEM JABM", waiting:"AI: Waiting for identification...",recognized:"AI: User recognized. Enter PIN.",
+      wrongPIN:"AI: Incorrect PIN. Check data.",invalidID:"AI: Invalid ID detected.",
+      pinShort:"AI: PIN must be 6 digits.",pinNotNumber:"AI: Numbers only (0-9).",
+      recoverBtn:"RECOVER CREDENTIALS",welcome:"Welcome, Jose Alfredo!",verified:"Access verified.",
+      roleLabel:"Role: <b>QA Auditor & Administrator</b>",manos:"Let's go",
+      panelHeader:"Work Compact System (Control Panel)",
+      almuerzo:"Lunch Alarm",salida:"End-of-day Alarm",cumple:"Birthday",ia:"Support AI",
+      dias:"days"
   }
 };
+
 let currentLang = "es";
 const DB = { user: "JBaltodano_Admin", pin: "404471", emp: "404471", name: "Jose Alfredo" };
 const BIRTHDAYS = [
-  { name:"Juan Perez",date:"04-19" },
-  { name:"Jose Alfredo",date:"04-21" },
-  { name:"Maria Quesada",date:"06-10" }
+  { name:"Juan Perez", date:"04-19" },
+  { name:"Jose Alfredo", date:"04-21" },
+  { name:"Maria Quesada", date:"06-10" }
 ];
-let iaStep = "inicio"; 
-let flowType = "";
 
-window.onload=()=>{
+let iaStep = "inicio"; // Control del chat IT
+
+// 2. INICIALIZACIÓN
+window.onload = () => {
   translateAll();
   showCumpleanos();
   drawClock();
@@ -209,235 +214,211 @@ window.onload=()=>{
   tickClock();
   initPusher();
 };
-function hidePanelAssets(){
-  document.getElementById('corner-clock-wrap').style.display="none";
-  document.getElementById('chat-window').style.display="none";
-}
-document.getElementById('lang-select').addEventListener('change', function() { currentLang = this.value; translateAll(); showCumpleanos(); });
 
+function hidePanelAssets() {
+  document.getElementById('corner-clock-wrap').style.display = "none";
+  document.getElementById('chat-window').style.display = "none";
+}
+
+document.getElementById('lang-select').addEventListener('change', function() { 
+  currentLang = this.value; 
+  translateAll(); 
+  showCumpleanos(); 
+});
+
+// 3. TRADUCCIÓN Y UI
 function translateAll() {
-  const lang=currentLang;
-  document.getElementById('system-title').textContent=i18n[lang].systemTitle;
-  document.getElementById('ia-msj').innerHTML=i18n[lang].waiting;
-  document.getElementById('btn-support').textContent=i18n[lang].recoverBtn;
-  document.getElementById('user-input').placeholder=lang==="es"?"ID de Usuario":"User ID";
-  document.getElementById('pin-input').placeholder=lang==="es"?"PIN de Seguridad":"Security PIN";
-  document.getElementById('welcome-title').textContent=i18n[lang].welcome;
-  document.getElementById('welcome-verified').textContent=i18n[lang].verified;
-  document.getElementById('welcome-role').innerHTML=i18n[lang].roleLabel;
-  document.getElementById('btn-manos').textContent=i18n[lang].manos;
-  document.getElementById('panel-header').innerHTML='<strong>'+ (lang=='es'?'Sistema Compacto de trabajo':'Work Compact System') +'</strong> (Panel de control)';
-  document.getElementById('tile-alm-title').textContent=i18n[lang].almuerzo;
-  document.getElementById('tile-salida-title').textContent=i18n[lang].salida;
-  document.getElementById('tile-cumple-title').textContent=i18n[lang].cumple;
-  document.getElementById('tile-ia-title').textContent=i18n[lang].ia;
+  const lang = currentLang;
+  document.getElementById('system-title').textContent = i18n[lang].systemTitle;
+  document.getElementById('ia-msj').innerHTML = i18n[lang].waiting;
+  document.getElementById('btn-support').textContent = i18n[lang].recoverBtn;
+  document.getElementById('user-input').placeholder = lang === "es" ? "ID de Usuario" : "User ID";
+  document.getElementById('pin-input').placeholder = lang === "es" ? "PIN de Seguridad" : "Security PIN";
+  document.getElementById('welcome-title').textContent = i18n[lang].welcome;
+  document.getElementById('welcome-verified').textContent = i18n[lang].verified;
+  document.getElementById('welcome-role').innerHTML = i18n[lang].roleLabel;
+  document.getElementById('btn-manos').textContent = i18n[lang].manos;
+  document.getElementById('panel-header').innerHTML = '<strong>' + (lang === 'es' ? 'Sistema Compacto' : 'Work Compact') + '</strong> (Panel)';
+  document.getElementById('tile-alm-title').textContent = i18n[lang].almuerzo;
+  document.getElementById('tile-salida-title').textContent = i18n[lang].salida;
+  document.getElementById('tile-cumple-title').textContent = i18n[lang].cumple;
+  document.getElementById('tile-ia-title').textContent = i18n[lang].ia;
 }
+
+// 4. LÓGICA DE ACCESO (LOGIN)
 function validate() {
-  const u=document.getElementById('user-input').value;
-  const ia=document.getElementById('ia-msj');
-  const btn=document.getElementById('btn-support');
-  const userInput=document.getElementById('user-input');
-  const pinArea=document.getElementById('pin-area');
-  const robotIcon=document.getElementById('robot-icon');
-  const userPhoto=document.getElementById('user-photo');
-  if(u===DB.user){
-    userInput.style.display="none";
-    pinArea.classList.remove('hidden');robotIcon.classList.add('hidden');userPhoto.classList.remove('hidden');
-    ia.innerHTML=i18n[currentLang].recognized;
+  const u = document.getElementById('user-input').value;
+  const ia = document.getElementById('ia-msj');
+  const btn = document.getElementById('btn-support');
+  const userInp = document.getElementById('user-input');
+  const pinArea = document.getElementById('pin-area');
+  const robot = document.getElementById('robot-icon');
+  const photo = document.getElementById('user-photo');
+
+  if (u === DB.user) {
+    userInp.style.display = "none";
+    pinArea.classList.remove('hidden');
+    robot.classList.add('hidden');
+    photo.classList.remove('hidden');
+    ia.innerHTML = i18n[currentLang].recognized;
     document.getElementById('pin-input').focus();
-    btn.style.display="none";
-  } else if(u.length>0&&!DB.user.startsWith(u)){
-    ia.innerHTML=i18n[currentLang].invalidID;
-    btn.style.display="block";
-    userInput.style.display="";pinArea.classList.add('hidden');robotIcon.classList.remove('hidden');userPhoto.classList.add('hidden');
-  } else{
-    ia.innerHTML=i18n[currentLang].waiting;btn.style.display="none";userInput.style.display="";pinArea.classList.add('hidden');
-    robotIcon.classList.remove('hidden');userPhoto.classList.add('hidden');
+    btn.style.display = "none";
+  } else if (u.length > 0 && !DB.user.startsWith(u)) {
+    ia.innerHTML = i18n[currentLang].invalidID;
+    btn.style.display = "block";
+  } else {
+    ia.innerHTML = i18n[currentLang].waiting;
+    btn.style.display = "none";
   }
 }
+
 function validatePIN() {
-  const p=document.getElementById('pin-input').value;
-  const ia=document.getElementById('ia-msj');const btn=document.getElementById('btn-support');
-  if(!/^\d*$/.test(p)){ia.innerHTML=i18n[currentLang].pinNotNumber;btn.style.display='block';return false;}
-  if(p.length<6){ia.innerHTML=i18n[currentLang].pinShort;btn.style.display="block";return false;}
-  if(p.length===6&&p!==DB.pin){ia.innerHTML=i18n[currentLang].wrongPIN;btn.style.display="block";return false;}
-  if(p===DB.pin){
-    btn.style.display="none";
-    ia.innerHTML=i18n[currentLang].recognized;
-    document.getElementById('screen-login').classList.remove('active');
-    document.getElementById('screen-welcome').classList.add('active');
-    document.getElementById('user-input').value="";document.getElementById('user-input').style.display="";
-    document.getElementById('pin-area').classList.add('hidden');
-    document.getElementById('robot-icon').classList.remove('hidden');document.getElementById('user-photo').classList.add('hidden');
-    document.getElementById('pin-input').value="";
-    showWelcomeAssistant(DB.user,DB.name);
-    return true;
+  const p = document.getElementById('pin-input').value;
+  const ia = document.getElementById('ia-msj');
+  const btn = document.getElementById('btn-support');
+  
+  if (!/^\d*$/.test(p)) { ia.innerHTML = i18n[currentLang].pinNotNumber; btn.style.display = 'block'; return; }
+  
+  if (p.length === 6) {
+    if (p === DB.pin) {
+      document.getElementById('screen-login').classList.remove('active');
+      document.getElementById('screen-welcome').classList.add('active');
+      showWelcomeAssistant(DB.user, DB.name);
+    } else {
+      ia.innerHTML = i18n[currentLang].wrongPIN;
+      btn.style.display = "block";
+    }
   }
 }
+
 function togglePin() {
-  const pinInput=document.getElementById('pin-input');
-  const eyeIcon=document.getElementById('eye-icon');
-  if(pinInput.type==="password"){pinInput.type="text";eyeIcon.classList.remove('fa-eye');eyeIcon.classList.add('fa-eye-slash');}
-  else{pinInput.type="password";eyeIcon.classList.remove('fa-eye-slash');eyeIcon.classList.add('fa-eye');}
+  const pinInp = document.getElementById('pin-input');
+  const eye = document.getElementById('eye-icon');
+  if (pinInp.type === "password") {
+    pinInp.type = "text"; eye.classList.replace('fa-eye', 'fa-eye-slash');
+  } else {
+    pinInp.type = "password"; eye.classList.replace('fa-eye-slash', 'fa-eye');
+  }
 }
+
+// 5. PANEL Y FUNCIONES DINÁMICAS
 function showWelcomeAssistant(user, name) {
-  document.getElementById("ia-assistant").innerHTML =
-    `<div id="ia-greeting"><b><i class="fa-solid fa-circle-user"></i> IA:</b> ${
-    currentLang==="es"
-      ? "¡Bienvenido "+name+"! Espero que tengas una jornada productiva.<br>"
-      : "Welcome "+name+"! Hope you have a productive session.<br>"
-    }</div>`;
+  document.getElementById("ia-assistant").innerHTML = `<b>IA:</b> ¡Hola ${name}! Acceso verificado.`;
   showCumpleanos();
 }
 
-// FUNCIÓN DE PANEL CON LÓGICA DINÁMICA POR DÍA
 function goToPanel() {
   document.getElementById('screen-welcome').classList.remove('active');
   document.getElementById('panel-futurista').classList.add('active');
   document.getElementById('corner-clock-wrap').style.display = "flex";
   
   const d = new Date();
-  const diaSemana = d.getDay(); // 0=Dom, 1=Lun, 2=Mar...
-  
-  let horaAlmuerzo = "12:00";
-  let horaSalida = "17:00";
+  const dia = d.getDay();
+  let alm = (dia >= 1 && dia <= 5) ? "12:30" : "12:00";
+  let sal = (dia >= 1 && dia <= 5) ? "18:00" : (dia === 6 ? "14:00" : "17:00");
 
-  // Lógica para Lunes a Viernes (incluyendo tu horario especial de Lunes)
-  if (diaSemana >= 1 && diaSemana <= 5) {
-    horaAlmuerzo = "12:30";
-    horaSalida = "18:00";
-  } else if (diaSemana === 6) {
-    horaSalida = "14:00"; // Sábados
-  }
+  document.getElementById('tile-alm').innerText = alm;
+  document.getElementById('tile-salida').innerText = sal;
+}
 
-  // Actualizar los textos de las tarjetas
-  document.getElementById('tile-alm').innerText = horaAlmuerzo;
-  document.getElementById('tile-salida').innerText = horaSalida;
-
-  // Notificación de la IA en el panel
-  const mensajeDia = (diaSemana === 1) ? "IA: Iniciando semana. Horario de Lunes activo (12:30 - 18:00)." : "IA: Sistema listo. Horarios cargados.";
-  document.getElementById('ia-panel-chat').innerHTML = `<div class="msg it">${mensajeDia}</div>`;
-}
-function pad(n){return (n<10?"0":"")+n;}
-function showCumpleanos() {
-  const now=new Date();
-  const todayVal=pad(now.getMonth()+1)+"-"+pad(now.getDate());
-  const cumpleHoy=BIRTHDAYS.find(c=>c.date===todayVal);
-  const info=document.getElementById('tile-cumple');
-  if(info) {
-    if(cumpleHoy){info.innerHTML=`${cumpleHoy.name}`;}
-    else{
-      let futuras=BIRTHDAYS.map(c=>{
-        let fecha=new Date(now.getFullYear()+(c.date<todayVal?1:0),parseInt(c.date.split('-')[0])-1,parseInt(c.date.split('-')[1]));
-        let diff=Math.ceil((fecha-now)/86400000);
-        return {...c,diff};
-      }).sort((a,b)=>a.diff-b.diff);
-      info.innerHTML=`${futuras[0].name} (${futuras[0].diff} ${i18n[currentLang].dias})`;
-    }
-  }
-}
-function dropEffect(tile){
-  tile.classList.remove('effect-drop');void tile.offsetWidth;
-  tile.classList.add('effect-drop');setTimeout(()=>tile.classList.remove('effect-drop'),570);
-}
-function drawClock() {
-  const clock=document.getElementById('corner-clock');
-  clock.innerHTML=`<div class="clock-center"></div><div class="clock-hour clock-needle"></div><div class="clock-min clock-needle"></div><div class="clock-sec clock-needle"></div><div class="clock-romans"></div>`;
-  const roman=['XII','I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
-  const romanC=clock.querySelector('.clock-romans');
-  roman.forEach((txt,i)=>{
-    let ang=(i-3)*30,r=61;
-    let x=50 + r*Math.cos(ang*Math.PI/180), y=50 + r*Math.sin(ang*Math.PI/180);
-    const sp=document.createElement('span');
-    sp.innerText=txt; sp.style.left=x+"%"; sp.style.top=y+"%"; sp.style.transform='translate(-50%,-50%)';
-    romanC.appendChild(sp);
-  });
-}
-let lastHour=-1,tickPlaying=false;
-function tickClock() {
-  const d=new Date();
-  const hour=d.getHours()%12,min=d.getMinutes(),sec=d.getSeconds();
-  const hourAngle=((hour+min/60)*30),minAngle=((min+sec/60)*6),secAngle=sec*6;
-  let c=document.getElementById('corner-clock');
-  if(c){
-    c.querySelector('.clock-hour').style.transform=`translate(-50%,-100%) rotate(${hourAngle}deg)`;
-    c.querySelector('.clock-min').style.transform=`translate(-50%,-100%) rotate(${minAngle}deg)`;
-    c.querySelector('.clock-sec').style.transform=`translate(-50%,-100%) rotate(${secAngle}deg)`;
-  }
-  const meses=[["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],["January","February","March","April","May","June","July","August","September","October","November","December"]];
-  const dnames=[["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"],["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]];
-  let lang=currentLang=='es'?0:1;
-  if(document.getElementById('clock-date'))
-    document.getElementById('clock-date').innerText=dnames[lang][d.getDay()]+", "+d.getDate()+" "+meses[lang][d.getMonth()]+" "+d.getFullYear();
-  let tick=document.getElementById('tick-audio'); if(!tickPlaying && c){tick.play();tickPlaying=true;}
-  if(sec===0&&min===0&&hour!==lastHour){lastHour=hour;playCuckoo(d.getHours());}
-  requestAnimationFrame(tickClock);
-}
-function playCuckoo(hh){
-  let a=document.getElementById('cuckoo-audio'); let times=Math.max(1,hh%12||12),count=0;
-  a.currentTime=0;a.play();a.onended=function(){if(++count<times){a.currentTime=0;a.play();}};
-}
-function openChat(){document.getElementById('chat-window').style.display='flex';}
-function closeChat(){document.getElementById('chat-window').style.display='none';}
-// 1. Pon esto al inicio de tus scripts
-let iaStep = "inicio"; 
-// 2. Reemplaza el contenido de tu función sendITMsg
+// 6. CHAT DE ASISTENCIA IA (Corregido)
 function sendITMsg() {
   let input = document.getElementById('chat-input');
   let val = input.value.trim(); 
-  if(!val) return; 
+  if (!val) return; 
+
   let box = document.getElementById('chat-box');
   let userDiv = document.createElement('div'); 
   userDiv.className = 'msg user'; 
   userDiv.textContent = val;
   box.appendChild(userDiv); 
   input.value = "";
+  
   setTimeout(() => {
-    let ia = document.createElement('div'); 
-    ia.className = 'msg it';
+    let iaMsg = document.createElement('div'); 
+    iaMsg.className = 'msg it';
     let low = val.toLowerCase();
-    let respuesta = "";
-    if(iaStep === "inicio") {
-      if(low.includes("pin") || low.includes("olvido")) {
-        respuesta = "IA: Entiendo. Para recuperar su PIN, por favor ingrese su Código de Trabajador.";
+    let res = "";
+
+    if (iaStep === "inicio") {
+      if (low.includes("pin") || low.includes("olvido")) {
+        res = "IA: Ingrese su Código de Trabajador para validar.";
         iaStep = "esperando_codigo";
       } else {
-        respuesta = "IA: ¿En qué puedo ayudarle con el sistema?";
+        res = "IA: ¿Cómo puedo ayudarte con el sistema?";
       }
-    } else if(iaStep === "esperando_codigo") {
-      if(val === DB.emp) { // Valida contra tu 404471
-        respuesta = "IA: Código correcto. Por seguridad, ¿cuál es el nombre de su madre?";
+    } else if (iaStep === "esperando_codigo") {
+      if (val === DB.emp) {
+        res = "IA: Código correcto. ¿Nombre de su madre?";
         iaStep = "esperando_seguridad";
       } else {
-        respuesta = "IA: El código no coincide. Intente de nuevo o contacte a un supervisor.";
+        res = "IA: Código incorrecto.";
       }
-    } else if(iaStep === "esperando_seguridad") {
-      if(low.includes("hilda")) {
-        respuesta = `IA: Identidad confirmada. Su PIN de acceso es: ${DB.pin}. Guarde esta información.`;
+    } else if (iaStep === "esperando_seguridad") {
+      if (low.includes("hilda")) {
+        res = `IA: Confirmado. Su PIN es ${DB.pin}.`;
         iaStep = "inicio";
       } else {
-        respuesta = "IA: Respuesta de seguridad incorrecta.";
+        res = "IA: Respuesta incorrecta.";
       }
     }
-    ia.textContent = respuesta;
-    box.appendChild(ia);
+    iaMsg.textContent = res;
+    box.appendChild(iaMsg);
     box.scrollTop = box.scrollHeight;
   }, 1000);
-}  
+}
+
+// 7. COMPONENTES EXTRA (Reloj, Pusher)
+function drawClock() {
+  const clock = document.getElementById('corner-clock');
+  clock.innerHTML = `<div class="clock-center"></div><div class="clock-hour clock-needle"></div><div class="clock-min clock-needle"></div><div class="clock-sec clock-needle"></div><div class="clock-romans"></div>`;
+  const roman = ['XII','I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
+  const container = clock.querySelector('.clock-romans');
+  roman.forEach((txt, i) => {
+    let ang = (i - 3) * 30, r = 61;
+    let x = 50 + r * Math.cos(ang * Math.PI / 180), y = 50 + r * Math.sin(ang * Math.PI / 180);
+    const s = document.createElement('span');
+    s.innerText = txt; s.style.cssText = `position:absolute;left:${x}%;top:${y}%;transform:translate(-50%,-50%)`;
+    container.appendChild(s);
+  });
+}
+
+function tickClock() {
+  const d = new Date();
+  const h = d.getHours() % 12, m = d.getMinutes(), s = d.getSeconds();
+  const hA = (h + m / 60) * 30, mA = (m + s / 60) * 6, sA = s * 6;
+  const c = document.getElementById('corner-clock');
+  if (c) {
+    c.querySelector('.clock-hour').style.transform = `translate(-50%,-100%) rotate(${hA}deg)`;
+    c.querySelector('.clock-min').style.transform = `translate(-50%,-100%) rotate(${mA}deg)`;
+    c.querySelector('.clock-sec').style.transform = `translate(-50%,-100%) rotate(${sA}deg)`;
+  }
+  requestAnimationFrame(tickClock);
+}
+
+function openChat() { document.getElementById('chat-window').style.display = 'flex'; }
+function closeChat() { document.getElementById('chat-window').style.display = 'none'; }
+
 function initPusher() {
   const pusher = new Pusher('53c3a868a60419e3eeb8', { cluster: 'us2' });
-  const canalEmpresarial = pusher.subscribe('chat-empresarial');
-  canalEmpresarial.bind('nuevo-mensaje', function(data) {
-    const panelChat = document.getElementById('ia-panel-chat');
-    const mensajeHTML = `<div class="msg it" style="margin-bottom:10px; border-left:3px solid var(--accent);"><b style="color:var(--accent)">${data.usuario}:</b> ${data.texto}<br><small style="font-size:0.7rem; color:#8892b0;">${new Date().toLocaleTimeString()}</small></div>`;
-    panelChat.innerHTML += mensajeHTML;
-    panelChat.scrollTop = panelChat.scrollHeight;
+  const canal = pusher.subscribe('chat-empresarial');
+  canal.bind('nuevo-mensaje', (data) => {
+    const p = document.getElementById('ia-panel-chat');
+    p.innerHTML += `<div class="msg it"><b>${data.usuario}:</b> ${data.texto}</div>`;
+    p.scrollTop = p.scrollHeight;
   });
-  const beamsClient = new PusherBeams.WebClient({ instanceId: '18fa1dad-9452-4f95-b3bf-fb450a684e8a' });
-  beamsClient.start().then(() => beamsClient.addDeviceInterest('global')).catch(console.error);
 }
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js');
+
+function pad(n){ return (n < 10 ? "0" : "") + n; }
+function showCumpleanos() {
+  const now = new Date();
+  const today = pad(now.getMonth() + 1) + "-" + pad(now.getDate());
+  const cHoy = BIRTHDAYS.find(c => c.date === today);
+  const info = document.getElementById('tile-cumple');
+  if (info) {
+    if (cHoy) info.innerText = cHoy.name;
+    else info.innerText = BIRTHDAYS[0].name; // Muestra el siguiente por defecto
+  }
 }
 </script>
 </body>
