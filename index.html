@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Sistema de Control Administrativo - JB</title>
+<title>Sistema Compacto de trabajo - JABM</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
 :root {
@@ -93,14 +93,12 @@ input:focus, select:focus{border-color:var(--accent);}
 <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
 </head>
 <body>
-
 <div style="position: absolute; top: 20px; right: 20px; z-index: 2000;">
   <select id="lang-select" style="background:#000; color:white; border:1px solid var(--accent); padding:8px; border-radius:5px; font-weight:bold; outline:none;">
     <option value="es">Español</option>
     <option value="en">English</option>
   </select>
 </div>
-
 <section id="screen-login" class="screen active">
   <div class="login-card">
     <div class="avatar-box">
@@ -119,7 +117,6 @@ input:focus, select:focus{border-color:var(--accent);}
     </div>
   </div>
 </section>
-
 <section id="screen-welcome" class="screen welcome-screen">
   <i class="fa-solid fa-circle-check" style="font-size:4.8rem;color:var(--ok);filter:drop-shadow(0 0 9px var(--ok));"></i>
   <h1 id="welcome-title"></h1>
@@ -130,7 +127,6 @@ input:focus, select:focus{border-color:var(--accent);}
   <div id="ia-assistant"></div>
   <button id="btn-manos" onclick="goToPanel()"></button>
 </section>
-
 <section id="panel-futurista" class="screen">
   <div class="panel-header" id="panel-header"></div>
   <div class="tiles-row">
@@ -153,14 +149,12 @@ input:focus, select:focus{border-color:var(--accent);}
   </div>
   <div class="ia-panel-chat-box" id="ia-panel-chat"></div>
 </section>
-
 <div id="corner-clock-wrap">
   <div id="corner-clock"></div>
   <div id="clock-date"></div>
   <audio id="cuckoo-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12f5e8c165.mp3"></audio>
   <audio id="tick-audio" src="https://cdn.pixabay.com/audio/2022/03/15/audio_117c47b946.mp3" loop></audio>
 </div>
-
 <div id="chat-window">
   <div style="background:var(--accent);color:#000;padding:12px 13px;font-weight:bold;display:flex;justify-content:space-between;align-items:center;border-radius:10px 10px 0 0;">
     <span id="chat-header"><i class="fa-solid fa-microchip"></i> SOPORTE IT DE JABM</span>
@@ -175,7 +169,6 @@ input:focus, select:focus{border-color:var(--accent);}
     <button id="chat-send" onclick="sendITMsg()" style="background:var(--accent); border:none; border-radius:6px; padding:0 17px; cursor:pointer; color:#000;"><i class="fa-solid fa-paper-plane"></i></button>
   </div>
 </div>
-
 <script>
 const i18n = {
   es: {
@@ -204,7 +197,6 @@ const BIRTHDAYS = [
   { name:"Jose Alfredo",date:"04-21" },
   { name:"Maria Quesada",date:"06-10" }
 ];
-
 window.onload=()=>{
   translateAll();
   showCumpleanos();
@@ -213,14 +205,11 @@ window.onload=()=>{
   tickClock();
   initPusher();
 };
-
 function hidePanelAssets(){
   document.getElementById('corner-clock-wrap').style.display="none";
   document.getElementById('chat-window').style.display="none";
 }
-
 document.getElementById('lang-select').addEventListener('change', function() { currentLang = this.value; translateAll(); showCumpleanos(); });
-
 function translateAll() {
   const lang=currentLang;
   document.getElementById('system-title').textContent=i18n[lang].systemTitle;
@@ -238,7 +227,6 @@ function translateAll() {
   document.getElementById('tile-cumple-title').textContent=i18n[lang].cumple;
   document.getElementById('tile-ia-title').textContent=i18n[lang].ia;
 }
-
 function validate() {
   const u=document.getElementById('user-input').value;
   const ia=document.getElementById('ia-msj');
@@ -262,7 +250,6 @@ function validate() {
     robotIcon.classList.remove('hidden');userPhoto.classList.add('hidden');
   }
 }
-
 function validatePIN() {
   const p=document.getElementById('pin-input').value;
   const ia=document.getElementById('ia-msj');const btn=document.getElementById('btn-support');
@@ -282,14 +269,12 @@ function validatePIN() {
     return true;
   }
 }
-
 function togglePin() {
   const pinInput=document.getElementById('pin-input');
   const eyeIcon=document.getElementById('eye-icon');
   if(pinInput.type==="password"){pinInput.type="text";eyeIcon.classList.remove('fa-eye');eyeIcon.classList.add('fa-eye-slash');}
   else{pinInput.type="password";eyeIcon.classList.remove('fa-eye-slash');eyeIcon.classList.add('fa-eye');}
 }
-
 function showWelcomeAssistant(user, name) {
   document.getElementById("ia-assistant").innerHTML =
     `<div id="ia-greeting"><b><i class="fa-solid fa-circle-user"></i> IA:</b> ${
@@ -299,7 +284,6 @@ function showWelcomeAssistant(user, name) {
     }</div>`;
   showCumpleanos();
 }
-
 function goToPanel() {
   document.getElementById('screen-welcome').classList.remove('active');
   document.getElementById('panel-futurista').classList.add('active');
@@ -309,7 +293,6 @@ function goToPanel() {
   document.getElementById('tile-ia').innerText=currentLang==="es"?"IA activa":"AI active";
   document.getElementById('ia-panel-chat').innerHTML=`<div class="msg it"><b>IA:</b> ${i18n[currentLang].iaChatPanel}</div>`;
 }
-
 function pad(n){return (n<10?"0":"")+n;}
 function showCumpleanos() {
   const now=new Date();
@@ -328,12 +311,10 @@ function showCumpleanos() {
     }
   }
 }
-
 function dropEffect(tile){
   tile.classList.remove('effect-drop');void tile.offsetWidth;
   tile.classList.add('effect-drop');setTimeout(()=>tile.classList.remove('effect-drop'),570);
 }
-
 function drawClock() {
   const clock=document.getElementById('corner-clock');
   clock.innerHTML=`<div class="clock-center"></div><div class="clock-hour clock-needle"></div><div class="clock-min clock-needle"></div><div class="clock-sec clock-needle"></div><div class="clock-romans"></div>`;
@@ -347,7 +328,6 @@ function drawClock() {
     romanC.appendChild(sp);
   });
 }
-
 let lastHour=-1,tickPlaying=false;
 function tickClock() {
   const d=new Date();
@@ -368,65 +348,77 @@ function tickClock() {
   if(sec===0&&min===0&&hour!==lastHour){lastHour=hour;playCuckoo(d.getHours());}
   requestAnimationFrame(tickClock);
 }
-
 function playCuckoo(hh){
   let a=document.getElementById('cuckoo-audio'); let times=Math.max(1,hh%12||12),count=0;
   a.currentTime=0;a.play();a.onended=function(){if(++count<times){a.currentTime=0;a.play();}};
 }
-
 function openChat(){document.getElementById('chat-window').style.display='flex';}
 function closeChat(){document.getElementById('chat-window').style.display='none';}
+// Variables de control para el flujo de la IA (Agrégalas al inicio de tu <script>)
+let iaStep = "inicio"; 
+let tempUserFound = "";
 function sendITMsg(){
   let input = document.getElementById('chat-input');
   let val = input.value.trim(); 
   if(!val) return;
-  
-  let box = document.getElementById('chat-box');
+    let box = document.getElementById('chat-box');
   let userDiv = document.createElement('div'); 
   userDiv.className = 'msg user'; 
   userDiv.textContent = val;
   box.appendChild(userDiv); 
   input.value = "";
-  
-  // Mostrar indicador de "Escribiendo..."
-  const typing = document.getElementById('typing-indicator');
+    const typing = document.getElementById('typing-indicator');
   typing.style.display = 'block';
-
   setTimeout(()=>{
     typing.style.display = 'none';
     let ia = document.createElement('div'); 
     ia.className = 'msg it'; 
-    
-    // Lógica de Asistencia Híbrida (IA / IT)
     let lowVal = val.toLowerCase();
     let response = "";
-    
-    if(lowVal.includes("pin") || lowVal.includes("contraseña") || lowVal.includes("entrar")) {
-      response = currentLang === "es" 
-        ? "IA: Si olvidaste tu PIN (404471), puedes usar el botón de 'Recuperar Credenciales' o solicitar un reseteo al Administrador JABM." 
-        : "AI: If you forgot your PIN, please use the 'Recover Credentials' button or contact the JABM Administrator.";
-    } else if(lowVal.includes("formateo") || lowVal.includes("mantenimiento") || lowVal.includes("precio")) {
-      response = currentLang === "es" 
-        ? "IA: He registrado tu interés en soporte técnico. Un técnico de IT revisará los costos de mantenimiento y formateo para tu equipo." 
-        : "AI: I've logged your interest in technical support. An IT technician will review maintenance and formatting costs for you.";
-    } else if(lowVal.includes("hola") || lowVal.includes("buenos")) {
-      response = currentLang === "es" 
-        ? "IA: ¡Hola! Soy tu asistente de soporte. ¿En qué puedo ayudarte con el Sistema JABM hoy?" 
-        : "AI: Hello! I'm your support assistant. How can I help you with the JABM System today?";
-    } else {
-      response = currentLang === "es" 
-        ? "IA: Mensaje recibido. Estoy analizando tu consulta para derivarla al técnico de IT disponible." 
-        : "AI: Message received. I'm analyzing your query to forward it to an available IT technician.";
+    // --- FLUJO DE VALIDACIÓN DE SEGURIDAD ---
+        if(iaStep === "inicio") {
+      if(lowVal.includes("usuario") || lowVal.includes("user") || lowVal.includes("id")) {
+        response = "IA: Entiendo. Para recuperar su ID de usuario, por favor ingrese su **Código de Trabajador**.";
+        iaStep = "esperando_codigo_usuario";
+      } else if(lowVal.includes("pin") || lowVal.includes("contraseña")) {
+        response = "IA: Protocolo de seguridad activo. Para recuperar su PIN, primero ingrese su **Código de Trabajador**.";
+        iaStep = "esperando_codigo_pin";
+      } else {
+        response = "IA: Soporte JABM activo. ¿Necesita recuperar su Usuario o su PIN de acceso?";
+      }
+    } 
+        else if(iaStep === "esperando_codigo_usuario") {
+      if(val === DB.emp) { // Valida contra el código '404471'
+        response = `IA: Código verificado. Su ID de usuario es: **${DB.user}**. ¿Necesita algo más?`;
+        iaStep = "inicio";
+      } else {
+        response = "IA: Código de trabajador incorrecto. Verifique e intente de nuevo.";
+      }
     }
-
+    else if(iaStep === "esperando_codigo_pin") {
+      if(val === DB.emp) {
+        response = "IA: Código correcto. Para evitar usurpación de identidad, responda: **¿Cuál es el nombre de su madre?**";
+        iaStep = "esperando_seguridad";
+      } else {
+        response = "IA: Código de trabajador no reconocido. No puedo proceder.";
+      }
+    }
+    else if(iaStep === "esperando_seguridad") {
+      // Validamos contra el nombre que tenemos en tu base de datos familiar (Hilda)
+      if(lowVal.includes("hilda")) {
+        response = `IA: Identidad confirmada, Jose Alfredo. Su PIN de acceso es: **${DB.pin}**.`;
+        iaStep = "inicio";
+      } else {
+        response = "IA: Respuesta de seguridad incorrecta. Acceso bloqueado por sospecha de usurpación.";
+        iaStep = "inicio"; // Reinicia por seguridad
+      }
+    }
     ia.textContent = response;
     box.appendChild(ia); 
     box.scrollTop = box.scrollHeight;
-  }, 1300);
-  
-  box.scrollTop = box.scrollHeight;
+  }, 1200);
+    box.scrollTop = box.scrollHeight;
 }
-
 // CONFIGURACIÓN PUSHER (Actualizada)
 function initPusher() {
   const pusher = new Pusher('53c3a868a60419e3eeb8', { cluster: 'us2' });
@@ -437,11 +429,9 @@ function initPusher() {
     panelChat.innerHTML += mensajeHTML;
     panelChat.scrollTop = panelChat.scrollHeight;
   });
-
   const beamsClient = new PusherBeams.WebClient({ instanceId: '18fa1dad-9452-4f95-b3bf-fb450a684e8a' });
   beamsClient.start().then(() => beamsClient.addDeviceInterest('global')).catch(console.error);
 }
-
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./service-worker.js');
   }
