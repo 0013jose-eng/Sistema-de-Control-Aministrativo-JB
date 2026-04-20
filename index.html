@@ -441,6 +441,14 @@ if ('serviceWorker' in navigator) {
     });
   });
 }
+const beamsClient = new PusherBeams.WebClient({
+  instanceId: 'TU_INSTANCE_ID_AQUÍ', // Cámbialo por el tuyo que sale en Pusher
+});
+
+beamsClient.start()
+  .then(() => beamsClient.addDeviceInterest('global'))
+  .then(() => console.log('¡Listo! El Sistema JB recibirá notificaciones'))
+  .catch(console.error);
 </script>
 </body>
 </html>
