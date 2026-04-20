@@ -361,65 +361,72 @@ function sendITMsg(){
   let input = document.getElementById('chat-input');
   let val = input.value.trim(); 
   if(!val) return;
-    let box = document.getElementById('chat-box');
+  
+  let box = document.getElementById('chat-box');
   let userDiv = document.createElement('div'); 
   userDiv.className = 'msg user'; 
   userDiv.textContent = val;
   box.appendChild(userDiv); 
   input.value = "";
-    const typing = document.getElementById('typing-indicator');
+  
+  const typing = document.getElementById('typing-indicator');
   typing.style.display = 'block';
+
   setTimeout(()=>{
     typing.style.display = 'none';
     let ia = document.createElement('div'); 
     ia.className = 'msg it'; 
     let lowVal = val.toLowerCase();
     let response = "";
-    // --- FLUJO DE VALIDACIÓN DE SEGURIDAD ---
-        if(iaStep === "inicio") {
-      if(lowVal.includes("usuario") || lowVal.includes("user") || lowVal.includes("id")) {
-        response = "IA: Entiendo. Para recuperar su ID de usuario, por favor ingrese su **Código de Trabajador**.";
-        iaStep = "esperando_codigo_usuario";
+
+    // --- LÓGICA DE REACCIÓN DINÁMICA ---
+    
+    if(iaStep === "inicio") {
+      if(lowVal.includes("usuario") || lowVal.includes("user")) {
+        response = currentLang === "es" ? "IA: Entendido. Para recuperar su ID, ingrese su Código de Trabajador." : "AI: Please enter your Employee Code to recover your ID.";
+        iaStep = "esperando_codigo";
+        flowType = "USER";
       } else if(lowVal.includes("pin") || lowVal.includes("contraseña")) {
-        response = "IA: Protocolo de seguridad activo. Para recuperar su PIN, primero ingrese su **Código de Trabajador**.";
-        iaStep = "esperando_codigo_pin";
+        response = currentLang === "es" ? "IA: Protocolo de PIN activo. Ingrese su Código de Trabajador." : "AI: PIN Protocol active. Enter your Employee Code.";
+        iaStep = "esperando_codigo";
+        flowType = "PIN";
       } else {
-        response = "IA: Soporte JABM activo. ¿Necesita recuperar su Usuario o su PIN de acceso?";
+        response = currentLang === "es" ? "IA: ¿En qué puedo ayudarle? (Usuario / PIN / Soporte)" : "AI: How can I help you? (User / PIN / Support)";
       }
     } 
-        else if(iaStep === "esperando_codigo_usuario") {
-      if(val === DB.emp) { // Valida contra el código '404471'
-        response = `IA: Código verificado. Su ID de usuario es: **${DB.user}**. ¿Necesita algo más?`;
-        iaStep = "inicio";
+    
+    else if(iaStep === "esperando_codigo") {
+      if(val === DB.emp) { // Valida contra 404471
+        if(flowType === "USER") {
+          response = `IA: Código verificado. Su Usuario es: **${DB.user}**. Acceso concedido.`;
+          iaStep = "inicio";
+        } else {
+          response = currentLang === "es" ? "IA: Código correcto. Pregunta de seguridad: ¿Nombre de su madre?" : "AI: Code correct. Security question: Mother's name?";
+          iaStep = "esperando_seguridad";
+        }
       } else {
-        response = "IA: Código de trabajador incorrecto. Verifique e intente de nuevo.";
+        response = "IA: Código incorrecto. Intente de nuevo o contacte a soporte vía Pusher.";
       }
     }
-    else if(iaStep === "esperando_codigo_pin") {
-      if(val === DB.emp) {
-        response = "IA: Código correcto. Para evitar usurpación de identidad, responda: **¿Cuál es el nombre de su madre?**";
-        iaStep = "esperando_seguridad";
-      } else {
-        response = "IA: Código de trabajador no reconocido. No puedo proceder.";
-      }
-    }
+
     else if(iaStep === "esperando_seguridad") {
-      // Validamos contra el nombre que tenemos en tu base de datos familiar (Hilda)
-      if(lowVal.includes("hilda")) {
-        response = `IA: Identidad confirmada, Jose Alfredo. Su PIN de acceso es: **${DB.pin}**.`;
+      if(lowVal.includes("hilda")) { // Respuesta basada en tu contexto familiar
+        response = `IA: Identidad confirmada. Su PIN es: **${DB.pin}**.`;
         iaStep = "inicio";
       } else {
-        response = "IA: Respuesta de seguridad incorrecta. Acceso bloqueado por sospecha de usurpación.";
-        iaStep = "inicio"; // Reinicia por seguridad
+        response = "IA: Respuesta incorrecta. Por seguridad, el flujo se ha reiniciado.";
+        iaStep = "inicio";
       }
     }
+
     ia.textContent = response;
     box.appendChild(ia); 
     box.scrollTop = box.scrollHeight;
-  }, 1200);
-    box.scrollTop = box.scrollHeight;
+  }, 1000);
+  
+  box.scrollTop = box.scrollHeight;
 }
-// CONFIGURACIÓN PUSHER (Actualizada)
+  // CONFIGURACIÓN PUSHER (Actualizada)
 function initPusher() {
   const pusher = new Pusher('53c3a868a60419e3eeb8', { cluster: 'us2' });
   const canalEmpresarial = pusher.subscribe('chat-empresarial');
