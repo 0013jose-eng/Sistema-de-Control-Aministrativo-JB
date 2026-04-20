@@ -378,16 +378,53 @@ function openChat(){document.getElementById('chat-window').style.display='flex';
 function closeChat(){document.getElementById('chat-window').style.display='none';}
 function sendITMsg(){
   let input = document.getElementById('chat-input');
-  let val = input.value.trim(); if(!val) return;
+  let val = input.value.trim(); 
+  if(!val) return;
+  
   let box = document.getElementById('chat-box');
-  let userDiv = document.createElement('div'); userDiv.className = 'msg user'; userDiv.textContent = val;
-  box.appendChild(userDiv); input.value = "";
+  let userDiv = document.createElement('div'); 
+  userDiv.className = 'msg user'; 
+  userDiv.textContent = val;
+  box.appendChild(userDiv); 
+  input.value = "";
+  
+  // Mostrar indicador de "Escribiendo..."
+  const typing = document.getElementById('typing-indicator');
+  typing.style.display = 'block';
+
   setTimeout(()=>{
-    let ia=document.createElement('div'); ia.className='msg it'; 
-    ia.textContent=currentLang==="es"?"Mensaje recibido. Pronto un agente te responderá.":"Message received. An IT agent will reply soon.";
-    box.appendChild(ia); box.scrollTop=box.scrollHeight;
-  },1300);
-  box.scrollTop=box.scrollHeight;
+    typing.style.display = 'none';
+    let ia = document.createElement('div'); 
+    ia.className = 'msg it'; 
+    
+    // Lógica de Asistencia Híbrida (IA / IT)
+    let lowVal = val.toLowerCase();
+    let response = "";
+    
+    if(lowVal.includes("pin") || lowVal.includes("contraseña") || lowVal.includes("entrar")) {
+      response = currentLang === "es" 
+        ? "IA: Si olvidaste tu PIN (404471), puedes usar el botón de 'Recuperar Credenciales' o solicitar un reseteo al Administrador JABM." 
+        : "AI: If you forgot your PIN, please use the 'Recover Credentials' button or contact the JABM Administrator.";
+    } else if(lowVal.includes("formateo") || lowVal.includes("mantenimiento") || lowVal.includes("precio")) {
+      response = currentLang === "es" 
+        ? "IA: He registrado tu interés en soporte técnico. Un técnico de IT revisará los costos de mantenimiento y formateo para tu equipo." 
+        : "AI: I've logged your interest in technical support. An IT technician will review maintenance and formatting costs for you.";
+    } else if(lowVal.includes("hola") || lowVal.includes("buenos")) {
+      response = currentLang === "es" 
+        ? "IA: ¡Hola! Soy tu asistente de soporte. ¿En qué puedo ayudarte con el Sistema JABM hoy?" 
+        : "AI: Hello! I'm your support assistant. How can I help you with the JABM System today?";
+    } else {
+      response = currentLang === "es" 
+        ? "IA: Mensaje recibido. Estoy analizando tu consulta para derivarla al técnico de IT disponible." 
+        : "AI: Message received. I'm analyzing your query to forward it to an available IT technician.";
+    }
+
+    ia.textContent = response;
+    box.appendChild(ia); 
+    box.scrollTop = box.scrollHeight;
+  }, 1300);
+  
+  box.scrollTop = box.scrollHeight;
 }
 
 // CONFIGURACIÓN PUSHER (Actualizada)
