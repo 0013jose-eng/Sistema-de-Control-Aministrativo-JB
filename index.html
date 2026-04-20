@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Sistema de Control Administrativo JB</title>
+<title>Sistema Compacto de trabajo - JABM</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
 :root {
@@ -11,89 +11,91 @@
   --tileblue: #1b3fa6; --tilepink: #b1256a; --tilegreen: #0ca492;
   --tileorange: #ea960e; --tile-gray: #1a2228; --futurist-glass: rgba(25,44,74,0.43);
 }
-html, body { height:100%; min-width:100vw; margin:0; padding:0; overflow:hidden;}
-body { background:var(--bg); color:white; font-family:'Segoe UI',Arial,sans-serif; display:flex; align-items:center; justify-content:center; }
-
+html, body { height:100%; min-width:100vw; margin:0; }
+body { background:var(--bg); color:white; font-family:'Segoe UI',Arial,sans-serif; min-height:100vh; min-width:100vw; display:flex;align-items:center;justify-content:center;overflow:hidden;}
 .screen { display: none; width:100vw; height:100vh; justify-content:center; align-items:center; position: absolute; top:0; left:0;}
-.active { display: flex !important; animation:fadeIn 0.7s;}
-
-/* LOGIN CARD */
-.login-card {
-  width:480px; max-width:95vw; background:rgba(13,17,23,0.95); padding:40px; 
-  border-radius:14px; border:1.5px solid #00f2ff2d; box-shadow:0 0 30px #00f2ff10;
-  backdrop-filter:blur(20px); display:flex; align-items:center; gap:30px;
+.active { display: flex !important;animation:fadeIn 0.7s;}
+.login-card{width:480px;max-width:99vw;background:rgba(13,17,23,0.95);padding:35px 40px;border-radius:14px;border:1.5px solid #00f2ff2d;box-shadow:0 0 30px #00f2ff10;backdrop-filter:blur(20px);display:flex;align-items:center;gap:30px}
+.avatar-box{width:110px;height:110px;border:2px solid #30363d;border-radius:10px;overflow:hidden;display:flex;justify-content:center;align-items:center;background:#000}
+.avatar-box img{width:100%;height:100%;object-fit:cover;}
+#ia-msj{border:1px solid var(--accent);padding:12px;border-radius:7px;font-size:.93rem;margin-bottom:13px;min-height:39px;display:flex;align-items:center;background:rgba(0,242,255,0.06);}
+input,select{width:100%;padding:11px;background:rgba(0,0,0,0.53);color:white;border:1px solid #333;border-radius:5px;margin-bottom:10px;box-sizing:border-box;outline:none;transition:border .3s}
+input:focus, select:focus{border-color:var(--accent);}
+.hidden{display:none !important;}
+#btn-support{width:100%;padding:11px;background:#0078d7;color:white;border:none;border-radius:6px;cursor:pointer;font-weight:bold;display:none;text-transform:uppercase;}
+#btn-manos{margin-top:24px;font-size:1.18rem;color:#fff;background:var(--accent);border:none;border-radius:30px;box-shadow:0 4px 32px #00e7fff7;padding:12px 36px;font-weight:bold;letter-spacing:1px;}
+#btn-manos:hover{background:#0ca492}
+.welcome-screen{flex-direction:column;text-align:center;}
+.welcome-screen h1{font-size:2.43rem;color:var(--accent);margin:15px 0;text-shadow:0 0 20px #00f2ff42;}
+/* --- PANEL CRISTAL --- */
+#panel-futurista { display:none;flex-direction:column;min-height:100vh;width:100vw;align-items:center;justify-content:flex-start;padding-top:47px;
+  background:linear-gradient(120deg,#16263f 30%,#2f445c 100%);
+  position:absolute;top:0;left:0;height:100vh;z-index:12;animation:fadeIn .8s;}
+.panel-header{color:var(--accent);text-align:center;font-size:2.09rem;font-weight:900;letter-spacing:1.7px;margin-bottom:15px;text-shadow:0 0 34px #2bffc5;}
+.panel-header strong{font-weight:900;color:white;}
+.tiles-row{display:flex;gap:40px;margin-bottom:40px;flex-wrap:wrap;justify-content:center;}
+.tile{min-width:178px;min-height:173px;border-radius:28px;background:var(--futurist-glass);
+  box-shadow:0 12px 60px rgba(0,225,255,0.12) inset,0 0 55px 2px #00f2ff0e,0 1.5px 2px #009dff38;
+  transition:transform .15s, box-shadow .25s;cursor:pointer;border:3.5px solid #00f2ff40;
+  padding:30px 22px 20px 26px;color:#ebf7ff;font-size:1.16rem;font-weight:600;margin:14px 0;position:relative;overflow:hidden;backdrop-filter:blur(19px);isolation:isolate;
 }
-.avatar-box {
-  width:110px; height:110px; border:2px solid #30363d; border-radius:10px; 
-  overflow:hidden; display:flex; justify-content:center; align-items:center; background:#000;
+.tile .tile-icon{font-size:2.72rem;margin-bottom:12px;}
+.tile::before{content:'';pointer-events:none;position:absolute;left:13%;top:11%;width:77%;height:72%;border-radius:39% 41%;background:radial-gradient(ellipse at 60% 40%,#00ffe9bb 0%,transparent 80%);opacity:0.1;mix-blend-mode:lighten;animation:shadowMove 3.7s linear infinite;z-index:1}
+@keyframes shadowMove{0%{left:13%;top:11%;}50%{left:19%;top:17%;}100%{left:13%;top:11%;}}
+.tile:hover{transform:scale(1.08) rotate(-2deg);box-shadow:0 15px 40px #00f2ffe3 inset,0 0 140px 2px #0ffcf96a;}
+.tile.effect-drop::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:50px;height:50px;border-radius:100%;background:radial-gradient(circle,#00b1ca33 0%,#b9efe900 90%);animation:dropRipple .62s cubic-bezier(.3,2.7,.29,-1.3);z-index:2;pointer-events:none;}
+@keyframes dropRipple{0%{opacity:1;width:60px;height:60px;}75%{opacity:.6;width:180px;height:180px;}100%{opacity:0;width:260px;height:260px;}}
+.tile.tile-blue{background:linear-gradient(135deg,var(--tileblue) 72%,#234cc7 100%);}
+.tile.tile-pink{background:linear-gradient(135deg,var(--tilepink) 72%,#921b57 100%);}
+.tile.tile-green{background:linear-gradient(135deg,var(--tilegreen) 72%,#107ea0 100%);}
+.tile.tile-orange{background:linear-gradient(135deg,var(--tileorange) 70%,#a6521b 100%);}
+.tile.tile-gray{background:var(--tile-gray);}
+.ia-panel-chat-box{margin-top:30px;width:90%;max-width:700px;background:#182940b2;border-radius:17px;border:1.7px solid #29ffe497;box-shadow:0 2px 18px #00e7ff34;padding:20px;}
+.ia-panel-chat-box .msg{font-size:1.05rem;}
+/* RELOJ ANALOGICO */
+#corner-clock-wrap{position:fixed;top:24px;right:37px;z-index:60;display:none;flex-direction:column;align-items:center;background:rgba(50,68,120,0.09);border-radius:18px;box-shadow:0 0 24px #00222b34;padding:17px 22px 10px;}
+#corner-clock{width:150px;height:150px;background:radial-gradient(ellipse 120% 108% at 50% 60%,#54fff661 0,#30405645 76%,transparent 90%);border-radius:50%;position:relative;box-shadow:0 0 20px #00e0ffaa;border:3.5px solid #2df8ffa4;margin-bottom:7px;overflow:visible;z-index:5;}
+.clock-needle{position:absolute;left:50%;top:50%;transform:translate(-50%,-100%);transform-origin:50% 99.1%;background:linear-gradient(90deg,#b5fcffef 33%,#2df8ffb3 100%);border-radius:6px;}
+.clock-hour{width:11px;height:45px;background:#feedc6;box-shadow:0 4px 13px #fff2;}
+.clock-min{width:6px;height:67px;}
+.clock-sec{width:2.1px;height:81px;background:linear-gradient(90deg,#55e0fd 43%,#e0ceed 90%);}
+.clock-center{width:19px;height:19px;background:linear-gradient(135deg,#47eee7,#013d65 90%);border-radius:99px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 10px #00e7f977;z-index:2;}
+.clock-romans{position:absolute;left:0;top:0;width:100%;height:100%;z-index:10;color:#ffe;font-family:Georgia,serif;font-size:1.13rem;text-shadow:0 2px 6px #26385c70;pointer-events:none;}
+.clock-romans span{position:absolute;}
+#clock-date{margin-top:7px;color:#c6e2e6;font-size:1rem;letter-spacing:.5px;text-shadow:0 0 3px #145;}
+#cuckoo-audio,#tick-audio{display:none;}
+/* Chat IT */
+#chat-window{position:fixed;bottom:20px;right:20px;width:420px;height:380px;background:#0d1117;border:1px solid var(--accent);border-radius:11px;display:none;flex-direction:column;z-index:120;box-shadow:0 10px 44px #11dae855;}
+.chat-messages{flex:1;padding:13px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
+.msg{padding:10px 14px;border-radius:12px;max-width:85%;font-size:.99rem;line-height:1.5;}
+.msg.user{background:#0078d7;align-self:flex-end;border-bottom-right-radius:2px;box-shadow:0 1px 10px #0078d733;}
+.msg.it{background:#1f242c;align-self:flex-start;border-left:4px solid var(--accent);border-bottom-left-radius:2px;}
+.msg.system{background:transparent;align-self:center;font-style:italic;font-size:0.9rem;color:#8892b0;text-align:center;border:none;padding:4px;}
+#typing-indicator{padding:0 11px 6px;font-size:.88rem;color:var(--accent);font-style:italic;display:none;}
+@media (max-width:1000px){
+  .login-card{width:97vw;max-width:350px;flex-direction:column;gap:13px;padding:14px;}
+  #corner-clock-wrap{right:2vw;top:15px;padding:9px 2vw;}
+  #corner-clock{width:97px;height:97px;}
+  #chat-window{width:96vw;max-width:310px;right:2vw;}
 }
-.avatar-box img { width:100%; height:100%; object-fit:cover; }
-
-#ia-msj {
-  border:1px solid var(--accent); padding:12px; border-radius:7px; font-size:.93rem; 
-  margin-bottom:13px; min-height:39px; display:flex; align-items:center; background:rgba(0,242,255,0.06);
+@media (max-width:600px){
+  .login-card{width:100vw;max-width:none;border-radius:4px;box-shadow:none;padding:9px;font-size:.92rem;}
+  .avatar-box{width:55px;height:55px;}
+  #corner-clock-wrap{right:0;top:5vw;padding:5px 1vw;}
+  #corner-clock{width:65px;height:65px;}
+  .tiles-row{flex-direction:column;gap:12px;}
+  .tile{min-width:unset;min-height:58px;padding:8px 4px 7px 8px;font-size:.99rem;border-radius:8px;}
+  .tile .tile-icon{font-size:1.05rem;}
 }
-
-input, select {
-  width:100%; padding:12px; background:rgba(0,0,0,0.5); color:white; border:1px solid #333; 
-  border-radius:5px; margin-bottom:12px; box-sizing:border-box; outline:none; transition:0.3s;
-}
-input:focus { border-color:var(--accent); }
-.hidden { display:none !important; }
-
-/* WELCOME & PANEL */
-.welcome-screen { flex-direction:column; text-align:center; }
-#panel-futurista { 
-  display:none; flex-direction:column; width:100vw; height:100vh; 
-  background:linear-gradient(120deg,#16263f 30%,#2f445c 100%); padding-top:50px;
-}
-.panel-header { color:var(--accent); text-align:center; font-size:2.1rem; font-weight:900; margin-bottom:30px; }
-
-.tiles-row { display:flex; gap:30px; flex-wrap:wrap; justify-content:center; }
-.tile {
-  min-width:180px; padding:25px; border-radius:25px; background:var(--futurist-glass);
-  border:2px solid #00f2ff40; transition:0.3s; cursor:pointer; text-align:center;
-}
-.tile:hover { transform:scale(1.05); box-shadow:0 0 20px var(--accent); }
-.tile-blue { background:var(--tileblue); }
-.tile-pink { background:var(--tilepink); }
-.tile-green { background:var(--tilegreen); }
-.tile-orange { background:var(--tileorange); }
-
-/* CLOCK */
-#corner-clock-wrap {
-  position:fixed; top:20px; right:20px; z-index:100; display:none; flex-direction:column; align-items:center;
-}
-#corner-clock {
-  width:140px; height:140px; border-radius:50%; border:3px solid var(--accent); position:relative;
-  background:rgba(0,0,0,0.4); box-shadow:0 0 15px var(--accent);
-}
-.clock-needle { position:absolute; left:50%; top:50%; transform-origin:50% 100%; transform:translate(-50%,-100%); }
-.clock-hour { width:8px; height:40px; background:#fff; }
-.clock-min { width:5px; height:60px; background:var(--accent); }
-.clock-sec { width:2px; height:70px; background:#ff0055; }
-
-/* CHAT SUPPORT */
-#chat-window {
-  position:fixed; bottom:20px; right:20px; width:350px; height:400px; 
-  background:#0d1117; border:1px solid var(--accent); border-radius:10px; 
-  display:none; flex-direction:column; z-index:200;
-}
-.chat-messages { flex:1; padding:15px; overflow-y:auto; display:flex; flex-direction:column; }
-.msg { padding:10px; border-radius:8px; margin-bottom:10px; max-width:80%; }
-.msg.it { background:#21262d; align-self:flex-start; border-left:3px solid var(--accent); }
-.msg.user { background:#0078d7; align-self:flex-end; }
-
-@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 </style>
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+<script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
 </head>
 <body>
 
-<audio id="cuckoo-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12f5e8c165.mp3"></audio>
-<audio id="tick-audio" src="https://cdn.pixabay.com/audio/2022/03/15/audio_117c47b946.mp3" loop></audio>
-
-<div style="position:fixed; top:10px; left:10px; z-index:1000;">
-  <select id="lang-select" onchange="changeLang(this.value)">
+<div style="position: absolute; top: 20px; right: 20px; z-index: 2000;">
+  <select id="lang-select" style="background:#000; color:white; border:1px solid var(--accent); padding:8px; border-radius:5px; font-weight:bold; outline:none;">
     <option value="es">Español</option>
     <option value="en">English</option>
   </select>
@@ -102,150 +104,309 @@ input:focus { border-color:var(--accent); }
 <section id="screen-login" class="screen active">
   <div class="login-card">
     <div class="avatar-box">
-      <i class="fa-solid fa-robot" id="robot-icon" style="font-size:4rem; color:#0078d7;"></i>
+      <i class="fa-solid fa-robot" id="robot-icon" style="font-size:4.2rem;color:#0078d7;"></i>
       <img id="user-photo" src="https://i.imgur.com/8Km9tLL.png" class="hidden">
     </div>
-    <div style="flex:1;">
-      <h2 id="system-title">SYSTEM JABM</h2>
-      <div id="ia-msj">IA: Esperando identificación...</div>
-      <input type="text" id="user-input" oninput="validateUser()" placeholder="ID de Usuario">
-      <div id="pin-area" class="hidden">
-        <input type="password" id="pin-input" maxlength="6" oninput="validatePIN()" placeholder="PIN">
+    <div style="flex-grow:1;">
+      <h2 id="system-title"></h2>
+      <div id="ia-msj"></div>
+      <input type="text" id="user-input" oninput="validate()" autocomplete="username">
+      <div id="pin-area" class="hidden" style="position:relative;">
+        <input type="password" id="pin-input" maxlength="6" inputmode="numeric" pattern="[0-9]*" oninput="validatePIN()">
+        <button type="button" id="btn-pin-toggle" onclick="togglePin()" title="" style="position:absolute;right:10px;top:12px;background:transparent;border:none;cursor:pointer;color:var(--accent);font-size:1.2rem;"><i class="fa-solid fa-eye" id="eye-icon"></i></button>
       </div>
+      <button id="btn-support" onclick="openChat()"></button>
     </div>
   </div>
 </section>
 
 <section id="screen-welcome" class="screen welcome-screen">
+  <i class="fa-solid fa-circle-check" style="font-size:4.8rem;color:var(--ok);filter:drop-shadow(0 0 9px var(--ok));"></i>
   <h1 id="welcome-title"></h1>
+  <p id="welcome-verified" style="color:#8892b0;font-size:1.08rem;"></p>
+  <div style="margin-top:28px;padding:17px;border:1px dashed var(--accent);border-radius:10px;background:rgba(0,242,255,0.03);">
+    <p id="welcome-role"></p>
+  </div>
   <div id="ia-assistant"></div>
-  <button id="btn-manos" onclick="goToPanel()" style="margin-top:20px; padding:15px 30px; border-radius:30px; border:none; background:var(--accent); font-weight:bold; cursor:pointer;">MANOS A LA OBRA</button>
+  <button id="btn-manos" onclick="goToPanel()"></button>
 </section>
 
 <section id="panel-futurista" class="screen">
-  <div class="panel-header" id="panel-header">SISTEMA CONTROL JB</div>
+  <div class="panel-header" id="panel-header"></div>
   <div class="tiles-row">
-    <div class="tile tile-blue"><i class="fa-solid fa-clock"></i><p id="t-alm">Almuerzo</p><span>12:30</span></div>
-    <div class="tile tile-green"><i class="fa-solid fa-door-open"></i><p id="t-sal">Salida</p><span>18:00</span></div>
-    <div class="tile tile-pink"><i class="fa-solid fa-cake-candles"></i><p id="t-cum">Cumpleaños</p><span id="val-cum">Juan P.</span></div>
-    <div class="tile tile-orange" onclick="openChat()"><i class="fa-solid fa-headset"></i><p id="t-ia">Soporte</p><span>Chat</span></div>
+    <div class="tile tile-blue" onclick="dropEffect(this)">
+      <div class="tile-icon"><i class="fa-solid fa-clock"></i></div>
+      <span id="tile-alm-title"></span><br><span id="tile-alm"></span>
+    </div>
+    <div class="tile tile-green" onclick="dropEffect(this)">
+      <div class="tile-icon"><i class="fa-solid fa-door-open"></i></div>
+      <span id="tile-salida-title"></span><br><span id="tile-salida"></span>
+    </div>
+    <div class="tile tile-pink" onclick="dropEffect(this)">
+      <div class="tile-icon"><i class="fa-solid fa-cake-candles"></i></div>
+      <span id="tile-cumple-title"></span><br><span id="tile-cumple"></span>
+    </div>
+    <div class="tile tile-orange" onclick="dropEffect(this)">
+      <div class="tile-icon"><i class="fa-solid fa-users-rays"></i></div>
+      <span id="tile-ia-title"></span><br><span id="tile-ia"></span>
+    </div>
   </div>
-  <div class="ia-panel-chat-box" id="ia-panel-chat">
-    <div class="msg it">Sistema iniciado correctamente.</div>
-  </div>
+  <div class="ia-panel-chat-box" id="ia-panel-chat"></div>
 </section>
 
 <div id="corner-clock-wrap">
-  <div id="corner-clock">
-    <div class="clock-hour clock-needle"></div>
-    <div class="clock-min clock-needle"></div>
-    <div class="clock-sec clock-needle"></div>
-  </div>
-  <div id="clock-date" style="margin-top:10px;"></div>
+  <div id="corner-clock"></div>
+  <div id="clock-date"></div>
+  <audio id="cuckoo-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12f5e8c165.mp3"></audio>
+  <audio id="tick-audio" src="https://cdn.pixabay.com/audio/2022/03/15/audio_117c47b946.mp3" loop></audio>
 </div>
 
 <div id="chat-window">
-  <div style="background:var(--accent); color:black; padding:10px; display:flex; justify-content:space-between;">
-    <span>SOPORTE IT</span>
-    <i class="fa-solid fa-xmark" onclick="closeChat()" style="cursor:pointer;"></i>
+  <div style="background:var(--accent);color:#000;padding:12px 13px;font-weight:bold;display:flex;justify-content:space-between;align-items:center;border-radius:10px 10px 0 0;">
+    <span id="chat-header"><i class="fa-solid fa-microchip"></i> SOPORTE IT DE JABM</span>
+    <i class="fa-solid fa-xmark" onclick="closeChat()" style="cursor:pointer;font-size:1.2rem;"></i>
   </div>
-  <div class="chat-messages" id="chat-box"></div>
-  <div style="padding:10px; display:flex;">
-    <input type="text" id="chat-input" style="margin:0; flex:1;">
-    <button onclick="sendMessage()" style="background:var(--accent); border:none; padding:10px;">OK</button>
+  <div class="chat-messages" id="chat-box">
+    <div class="msg system">¡Asistencia demo! Escribe tu problema.</div>
+  </div>
+  <div id="typing-indicator">Escribiendo...</div>
+  <div style="padding:11px 7px 7px 7px; border-top:1px solid #222; display:flex; gap:10px; background: #0a0e14;">
+    <input type="text" id="chat-input" placeholder="Escriba un mensaje..." style="margin:0; flex:1;" onkeypress="if(event.key==='Enter') sendITMsg()">
+    <button id="chat-send" onclick="sendITMsg()" style="background:var(--accent); border:none; border-radius:6px; padding:0 17px; cursor:pointer; color:#000;"><i class="fa-solid fa-paper-plane"></i></button>
   </div>
 </div>
 
-<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-<script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
-
 <script>
-// CONFIGURACIÓN PUSHER
-const PUSHER_CONF = { 
-  key: '53c3a868a60419e3eeb8', 
-  cluster: 'us2', 
-  instanceId: '18fa1dad-9452-4f95-b3bf-fb450a684e8a' 
-};
-
-const DB = { user: "JBaltodano_Admin", pin: "404471", name: "Jose Alfredo" };
-let currentLang = "es";
-
 const i18n = {
-  es: { welcome: "¡Bienvenido, Jose!", recognized: "IA: Usuario reconocido. PIN requerido.", system: "SISTEMA CONTROL JB" },
-  en: { welcome: "Welcome, Jose!", recognized: "AI: User recognized. PIN required.", system: "JB CONTROL SYSTEM" }
+  es: {
+      systemTitle:"SYSTEM JABM", waiting:"IA: Esperando identificación...",recognized:"IA: Usuario reconocido. Por favor, ingrese su PIN.",
+      wrongPIN:"IA: PIN incorrecto. Verifique sus datos.",invalidID:"IA: ID inválido detectado.",
+      pinShort:"IA: El PIN debe ser un número de 6 dígitos.", pinNotNumber:"IA: El PIN solo puede contener números (0-9).",
+      recoverBtn:"RECUPERAR CREDENCIALES", showPin:"Mostrar PIN", hidePin:"Ocultar PIN",welcome:"¡Bienvenido, Jose Alfredo!",verified:"Acceso al Sistema JABM verificado correctamente.",
+      roleLabel:"Rol: <b>QA Auditor & Administrador</b>",manos:"Manos a la obra",panelHeader:"Sistema Compacto de trabajo (Panel de control)",almuerzo:"Alarma de Almuerzo",salida:"Alarma de Salida",
+      cumple:"Cumpleaños",ia:"IA de Asistencia",iaChatPanel:"¡Bienvenido al panel de control! Aquí tienes tus alarmas y recordatorios activos.<br>La IA te avisará 10 minutos antes de tu hora de almuerzo y salida.<br><br><i>(Puedes expandir las funciones de IA y alarmas aquí...)</i>",
+      cumpleHoy:"🎂 Hoy cumpleaños: ",cumpleNext:"🎉 Próximo cumpleaños: ",proximoEn:"en",dias:"días"
+  },
+  en: {
+      systemTitle:"SYSTEM JABM", waiting:"AI: Waiting for identification...",recognized:"AI: User recognized. Please enter your PIN.",
+      wrongPIN:"AI: Incorrect PIN. Please check your data.",invalidID:"AI: Invalid ID detected.",
+      pinShort:"AI: The PIN must be a 6-digit number.",pinNotNumber:"AI: PIN can only contain numbers (0-9).",
+      recoverBtn:"RECOVER CREDENTIALS",showPin:"Show PIN",hidePin:"Hide PIN",welcome:"Welcome, Jose Alfredo!",verified:"Access to JABM System successfully verified.",
+      roleLabel:"Role: <b>QA Auditor & Administrator</b>",manos:"Let's go",panelHeader:"Work Compact System (Control Panel)",almuerzo:"Lunch Alarm",salida:"End-of-day Alarm",cumple:"Birthday",ia:"Support AI",
+      iaChatPanel:"Welcome to the control panel! Here you have your active alarms and reminders.<br>The AI will remind you 10 minutes before your lunch and end time.<br><br><i>(You can expand IA/alarms features here...)</i>",
+      cumpleHoy:"🎂 Birthday today: ",cumpleNext:"🎉 Next birthday: ",proximoEn:"in",dias:"days"
+  }
+};
+let currentLang = "es";
+const DB = { user: "JBaltodano_Admin", pin: "404471", emp: "404471", name: "Jose Alfredo" };
+const BIRTHDAYS = [
+  { name:"Juan Perez",date:"04-19" },
+  { name:"Jose Alfredo",date:"04-21" },
+  { name:"Maria Quesada",date:"06-10" }
+];
+
+window.onload=()=>{
+  translateAll();
+  showCumpleanos();
+  drawClock();
+  hidePanelAssets();
+  tickClock();
+  initPusher();
 };
 
-window.onload = () => { tickClock(); initPusher(); };
-
-function initPusher() {
-  const pusher = new Pusher(PUSHER_CONF.key, { cluster: PUSHER_CONF.cluster });
-  const channel = pusher.subscribe('chat-empresarial');
-  channel.bind('nuevo-mensaje', (data) => {
-    document.getElementById('ia-panel-chat').innerHTML += `<div class="msg it"><b>${data.usuario}:</b> ${data.texto}</div>`;
-  });
-
-  if (typeof PusherBeams !== 'undefined') {
-    const beamsClient = new PusherBeams.WebClient({ instanceId: PUSHER_CONF.instanceId });
-    beamsClient.start().then(() => beamsClient.addDeviceInterest('global')).catch(console.error);
-  }
+function hidePanelAssets(){
+  document.getElementById('corner-clock-wrap').style.display="none";
+  document.getElementById('chat-window').style.display="none";
 }
 
-function validateUser() {
-  const val = document.getElementById('user-input').value;
-  if(val === DB.user) {
-    document.getElementById('user-input').classList.add('hidden');
-    document.getElementById('pin-area').classList.remove('hidden');
-    document.getElementById('ia-msj').innerText = i18n[currentLang].recognized;
-    document.getElementById('robot-icon').classList.add('hidden');
-    document.getElementById('user-photo').classList.remove('hidden');
+document.getElementById('lang-select').addEventListener('change', function() { currentLang = this.value; translateAll(); showCumpleanos(); });
+
+function translateAll() {
+  const lang=currentLang;
+  document.getElementById('system-title').textContent=i18n[lang].systemTitle;
+  document.getElementById('ia-msj').innerHTML=i18n[lang].waiting;
+  document.getElementById('btn-support').textContent=i18n[lang].recoverBtn;
+  document.getElementById('user-input').placeholder=lang==="es"?"ID de Usuario":"User ID";
+  document.getElementById('pin-input').placeholder=lang==="es"?"PIN de Seguridad":"Security PIN";
+  document.getElementById('welcome-title').textContent=i18n[lang].welcome;
+  document.getElementById('welcome-verified').textContent=i18n[lang].verified;
+  document.getElementById('welcome-role').innerHTML=i18n[lang].roleLabel;
+  document.getElementById('btn-manos').textContent=i18n[lang].manos;
+  document.getElementById('panel-header').innerHTML='<strong>'+ (lang=='es'?'Sistema Compacto de trabajo':'Work Compact System') +'</strong> (Panel de control)';
+  document.getElementById('tile-alm-title').textContent=i18n[lang].almuerzo;
+  document.getElementById('tile-salida-title').textContent=i18n[lang].salida;
+  document.getElementById('tile-cumple-title').textContent=i18n[lang].cumple;
+  document.getElementById('tile-ia-title').textContent=i18n[lang].ia;
+}
+
+function validate() {
+  const u=document.getElementById('user-input').value;
+  const ia=document.getElementById('ia-msj');
+  const btn=document.getElementById('btn-support');
+  const userInput=document.getElementById('user-input');
+  const pinArea=document.getElementById('pin-area');
+  const robotIcon=document.getElementById('robot-icon');
+  const userPhoto=document.getElementById('user-photo');
+  if(u===DB.user){
+    userInput.style.display="none";
+    pinArea.classList.remove('hidden');robotIcon.classList.add('hidden');userPhoto.classList.remove('hidden');
+    ia.innerHTML=i18n[currentLang].recognized;
+    document.getElementById('pin-input').focus();
+    btn.style.display="none";
+  } else if(u.length>0&&!DB.user.startsWith(u)){
+    ia.innerHTML=i18n[currentLang].invalidID;
+    btn.style.display="block";
+    userInput.style.display="";pinArea.classList.add('hidden');robotIcon.classList.remove('hidden');userPhoto.classList.add('hidden');
+  } else{
+    ia.innerHTML=i18n[currentLang].waiting;btn.style.display="none";userInput.style.display="";pinArea.classList.add('hidden');
+    robotIcon.classList.remove('hidden');userPhoto.classList.add('hidden');
   }
 }
 
 function validatePIN() {
-  if(document.getElementById('pin-input').value === DB.pin) {
+  const p=document.getElementById('pin-input').value;
+  const ia=document.getElementById('ia-msj');const btn=document.getElementById('btn-support');
+  if(!/^\d*$/.test(p)){ia.innerHTML=i18n[currentLang].pinNotNumber;btn.style.display='block';return false;}
+  if(p.length<6){ia.innerHTML=i18n[currentLang].pinShort;btn.style.display="block";return false;}
+  if(p.length===6&&p!==DB.pin){ia.innerHTML=i18n[currentLang].wrongPIN;btn.style.display="block";return false;}
+  if(p===DB.pin){
+    btn.style.display="none";
+    ia.innerHTML=i18n[currentLang].recognized;
     document.getElementById('screen-login').classList.remove('active');
     document.getElementById('screen-welcome').classList.add('active');
-    document.getElementById('welcome-title').innerText = i18n[currentLang].welcome;
-    document.getElementById('tick-audio').play();
+    document.getElementById('user-input').value="";document.getElementById('user-input').style.display="";
+    document.getElementById('pin-area').classList.add('hidden');
+    document.getElementById('robot-icon').classList.remove('hidden');document.getElementById('user-photo').classList.add('hidden');
+    document.getElementById('pin-input').value="";
+    showWelcomeAssistant(DB.user,DB.name);
+    return true;
   }
+}
+
+function togglePin() {
+  const pinInput=document.getElementById('pin-input');
+  const eyeIcon=document.getElementById('eye-icon');
+  if(pinInput.type==="password"){pinInput.type="text";eyeIcon.classList.remove('fa-eye');eyeIcon.classList.add('fa-eye-slash');}
+  else{pinInput.type="password";eyeIcon.classList.remove('fa-eye-slash');eyeIcon.classList.add('fa-eye');}
+}
+
+function showWelcomeAssistant(user, name) {
+  document.getElementById("ia-assistant").innerHTML =
+    `<div id="ia-greeting"><b><i class="fa-solid fa-circle-user"></i> IA:</b> ${
+    currentLang==="es"
+      ? "¡Bienvenido "+name+"! Espero que tengas una jornada productiva.<br>"
+      : "Welcome "+name+"! Hope you have a productive session.<br>"
+    }</div>`;
+  showCumpleanos();
 }
 
 function goToPanel() {
   document.getElementById('screen-welcome').classList.remove('active');
   document.getElementById('panel-futurista').classList.add('active');
-  document.getElementById('corner-clock-wrap').style.display = "flex";
+  document.getElementById('corner-clock-wrap').style.display="flex";
+  document.getElementById('tile-alm').innerText="12:30";
+  document.getElementById('tile-salida').innerText="18:00";
+  document.getElementById('tile-ia').innerText=currentLang==="es"?"IA activa":"AI active";
+  document.getElementById('ia-panel-chat').innerHTML=`<div class="msg it"><b>IA:</b> ${i18n[currentLang].iaChatPanel}</div>`;
 }
 
+function pad(n){return (n<10?"0":"")+n;}
+function showCumpleanos() {
+  const now=new Date();
+  const todayVal=pad(now.getMonth()+1)+"-"+pad(now.getDate());
+  const cumpleHoy=BIRTHDAYS.find(c=>c.date===todayVal);
+  const info=document.getElementById('tile-cumple');
+  if(info) {
+    if(cumpleHoy){info.innerHTML=`${cumpleHoy.name}`;}
+    else{
+      let futuras=BIRTHDAYS.map(c=>{
+        let fecha=new Date(now.getFullYear()+(c.date<todayVal?1:0),parseInt(c.date.split('-')[0])-1,parseInt(c.date.split('-')[1]));
+        let diff=Math.ceil((fecha-now)/86400000);
+        return {...c,diff};
+      }).sort((a,b)=>a.diff-b.diff);
+      info.innerHTML=`${futuras[0].name} (${futuras[0].diff} ${i18n[currentLang].dias})`;
+    }
+  }
+}
+
+function dropEffect(tile){
+  tile.classList.remove('effect-drop');void tile.offsetWidth;
+  tile.classList.add('effect-drop');setTimeout(()=>tile.classList.remove('effect-drop'),570);
+}
+
+function drawClock() {
+  const clock=document.getElementById('corner-clock');
+  clock.innerHTML=`<div class="clock-center"></div><div class="clock-hour clock-needle"></div><div class="clock-min clock-needle"></div><div class="clock-sec clock-needle"></div><div class="clock-romans"></div>`;
+  const roman=['XII','I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
+  const romanC=clock.querySelector('.clock-romans');
+  roman.forEach((txt,i)=>{
+    let ang=(i-3)*30,r=61;
+    let x=50 + r*Math.cos(ang*Math.PI/180), y=50 + r*Math.sin(ang*Math.PI/180);
+    const sp=document.createElement('span');
+    sp.innerText=txt; sp.style.left=x+"%"; sp.style.top=y+"%"; sp.style.transform='translate(-50%,-50%)';
+    romanC.appendChild(sp);
+  });
+}
+
+let lastHour=-1,tickPlaying=false;
 function tickClock() {
-  const now = new Date();
-  const h = now.getHours() % 12;
-  const m = now.getMinutes();
-  const s = now.getSeconds();
-  
-  document.querySelector('.clock-hour').style.transform = `translate(-50%,-100%) rotate(${(h+(m/60))*30}deg)`;
-  document.querySelector('.clock-min').style.transform = `translate(-50%,-100%) rotate(${(m+(s/60))*6}deg)`;
-  document.querySelector('.clock-sec').style.transform = `translate(-50%,-100%) rotate(${s*6}deg)`;
-  document.getElementById('clock-date').innerText = now.toLocaleDateString();
-  
-  if(m === 0 && s === 0) document.getElementById('cuckoo-audio').play();
-  
+  const d=new Date();
+  const hour=d.getHours()%12,min=d.getMinutes(),sec=d.getSeconds();
+  const hourAngle=((hour+min/60)*30),minAngle=((min+sec/60)*6),secAngle=sec*6;
+  let c=document.getElementById('corner-clock');
+  if(c){
+    c.querySelector('.clock-hour').style.transform=`translate(-50%,-100%) rotate(${hourAngle}deg)`;
+    c.querySelector('.clock-min').style.transform=`translate(-50%,-100%) rotate(${minAngle}deg)`;
+    c.querySelector('.clock-sec').style.transform=`translate(-50%,-100%) rotate(${secAngle}deg)`;
+  }
+  const meses=[["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],["January","February","March","April","May","June","July","August","September","October","November","December"]];
+  const dnames=[["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"],["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]];
+  let lang=currentLang=='es'?0:1;
+  if(document.getElementById('clock-date'))
+    document.getElementById('clock-date').innerText=dnames[lang][d.getDay()]+", "+d.getDate()+" "+meses[lang][d.getMonth()]+" "+d.getFullYear();
+  let tick=document.getElementById('tick-audio'); if(!tickPlaying && c){tick.play();tickPlaying=true;}
+  if(sec===0&&min===0&&hour!==lastHour){lastHour=hour;playCuckoo(d.getHours());}
   requestAnimationFrame(tickClock);
 }
 
-function changeLang(val) {
-  currentLang = val;
-  document.getElementById('system-title').innerText = i18n[val].system;
+function playCuckoo(hh){
+  let a=document.getElementById('cuckoo-audio'); let times=Math.max(1,hh%12||12),count=0;
+  a.currentTime=0;a.play();a.onended=function(){if(++count<times){a.currentTime=0;a.play();}};
 }
 
-function openChat() { document.getElementById('chat-window').style.display = "flex"; }
-function closeChat() { document.getElementById('chat-window').style.display = "none"; }
+function openChat(){document.getElementById('chat-window').style.display='flex';}
+function closeChat(){document.getElementById('chat-window').style.display='none';}
+function sendITMsg(){
+  let input = document.getElementById('chat-input');
+  let val = input.value.trim(); if(!val) return;
+  let box = document.getElementById('chat-box');
+  let userDiv = document.createElement('div'); userDiv.className = 'msg user'; userDiv.textContent = val;
+  box.appendChild(userDiv); input.value = "";
+  setTimeout(()=>{
+    let ia=document.createElement('div'); ia.className='msg it'; 
+    ia.textContent=currentLang==="es"?"Mensaje recibido. Pronto un agente te responderá.":"Message received. An IT agent will reply soon.";
+    box.appendChild(ia); box.scrollTop=box.scrollHeight;
+  },1300);
+  box.scrollTop=box.scrollHeight;
+}
 
-function sendMessage() {
-  const input = document.getElementById('chat-input');
-  if(input.value) {
-    document.getElementById('chat-box').innerHTML += `<div class="msg user">${input.value}</div>`;
-    input.value = "";
-  }
+// CONFIGURACIÓN PUSHER (Actualizada)
+function initPusher() {
+  const pusher = new Pusher('53c3a868a60419e3eeb8', { cluster: 'us2' });
+  const canalEmpresarial = pusher.subscribe('chat-empresarial');
+  canalEmpresarial.bind('nuevo-mensaje', function(data) {
+    const panelChat = document.getElementById('ia-panel-chat');
+    const mensajeHTML = `<div class="msg it" style="margin-bottom:10px; border-left:3px solid var(--accent);"><b style="color:var(--accent)">${data.usuario}:</b> ${data.texto}<br><small style="font-size:0.7rem; color:#8892b0;">${new Date().toLocaleTimeString()}</small></div>`;
+    panelChat.innerHTML += mensajeHTML;
+    panelChat.scrollTop = panelChat.scrollHeight;
+  });
+
+  const beamsClient = new PusherBeams.WebClient({ instanceId: '18fa1dad-9452-4f95-b3bf-fb450a684e8a' });
+  beamsClient.start().then(() => beamsClient.addDeviceInterest('global')).catch(console.error);
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js');
 }
 </script>
 </body>
