@@ -876,7 +876,7 @@ input:focus, select:focus{border-color:var(--accent);}
       <div id="user-form-feedback"></div>
       <div class="form-row">
         <label><span data-i18n="itWorkerCode">Código del trabajador</span> *</label>
-        <input type="text" id="usr-codigo" placeholder="Ej. 404477" oninput="usrFillFromCodigo()">
+        <input type="text" id="usr-codigo" placeholder="Ej. 404471" oninput="usrFillFromCodigo()">
       </div>
       <div class="grid">
         <div class="form-row">
@@ -1242,9 +1242,12 @@ const i18n = {
 };
 
 let currentLang = "es";
-const DB = { user: "JBaltodano_ManagerIT", pin: "404477", emp: "404477", name: "Jose Baltodano" };
+const DB = { user: "JBaltodano_Admin", pin: "404471", emp: "404471", name: "Jose Alfredo" };
 const BIRTHDAYS = [
-  ];
+  { name:"Juan Perez", date:"04-19" },
+  { name:"Jose Alfredo", date:"04-21" },
+  { name:"Maria Quesada", date:"06-10" }
+];
 
 let iaStep = "inicio";
 
@@ -2441,10 +2444,15 @@ function showCumpleanos() {
 
 // Usuarios de la empresa (demo)
 const ENTERPRISE_USERS = [
-  {id:'404477', name:'José Baltodano', online:true, isITManager:true},
-  ];
+  {id:'404471', name:'Jose Alfredo', online:true, isITManager:true},
+  {id:'111001', name:'Maria Quesada', online:true, isITManager:false},
+  {id:'222002', name:'Juan Perez', online:false, isITManager:false},
+  {id:'333003', name:'Ana Vargas', online:true, isITManager:false},
+  {id:'444004', name:'Carlos Rojas', online:true, isITManager:false},
+  {id:'555005', name:'Laura Mendez', online:false, isITManager:false},
+];
 
-const ME_ID = '404477'; // ID propio en este demo
+const ME_ID = '404471'; // ID propio en este demo
 
 // Grupos de trabajo
 let GROUPS = []; // {id, name, members:[ids], createdAt}
@@ -2781,7 +2789,7 @@ function escapeHtml(str){
 
 // Para soporte IT (compatibilidad)
 function notifyITManager(msg) {
-  if(DB.user === '404477') { alert(msg); }
+  if(DB.user === '404471') { alert(msg); }
 }
 
 // =====================================================
@@ -2798,8 +2806,11 @@ const RRHH_KEYS = {
 
 // Personal por defecto (semilla — se carga si no hay datos guardados)
 const RRHH_PERSONAL_DEFAULT = [
-  { code:'404477', nombres:'Jose Alfredo', apellidos:'Baltodano Mora',  cedula:'003-130192-0003Q', fechaNac:'1992-01-13', fechaIng:'2015-12-10', area:'IT',  cargo:'QA /IT Manager', foto:'' },
-  ];
+  { code:'404471', nombres:'Jose Alfredo', apellidos:'Baltodano',  cedula:'001-150189-0024N', fechaNac:'1989-01-15', fechaIng:'2015-03-01', area:'IT',             cargo:'IT Manager',    foto:'' },
+  { code:'100001', nombres:'Juan',         apellidos:'Pérez',      cedula:'001-220790-0011A', fechaNac:'1990-07-22', fechaIng:'2018-06-15', area:'Producción',     cargo:'Operario',      foto:'' },
+  { code:'100002', nombres:'María',        apellidos:'López',      cedula:'001-100395-0044B', fechaNac:'1995-03-10', fechaIng:'2020-09-01', area:'Administración', cargo:'Asistente',     foto:'' },
+  { code:'100005', nombres:'Maria',        apellidos:'Quesada',    cedula:'001-050792-0033C', fechaNac:'1992-07-05', fechaIng:'2019-04-20', area:'Recepción',      cargo:'Recepcionista', foto:'' },
+];
 
 let _rrhhClockTimer = null;
 let _empPhotoData   = '';
@@ -3749,7 +3760,7 @@ function _qaLoadLog() {
    ===================================================== */
 const IT_USERS_KEY = 'jabm-it-users';
 const IT_DEFAULT_USERS = [{
-  codigo: '404477', username: 'JBaltodano_ManagerIT', pin: '404477',
+  codigo: '404471', username: 'JBaltodano_Admin', pin: '404471',
   nombres: 'Jose Alfredo', apellidos: 'Baltodano Mejía',
   area: 'IT', cargo: 'IT Manager / QA Auditor',
   activo: true,
