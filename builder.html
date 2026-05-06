@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Builder</title>
+</head>
+<body>
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+#builder {
+  display: flex;
+  height: 100vh;
+}
+
+.panel {
+  padding: 10px;
+  overflow: auto;
+}
+
+.left {
+  width: 20%;
+  background: #020617;
+  border-right: 1px solid #1e293b;
+}
+
+.center {
+  width: 40%;
+  background: #020617;
+}
+
+.right {
+  width: 40%;
+  background: #0f172a;
+}
+
+h3 {
+  margin-top: 0;
+}
+
+button {
+  background: #0ea5e9;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  margin: 3px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0284c7;
+}
+
+textarea {
+  width: 100%;
+  height: 80%;
+  background: #020617;
+  color: #22c55e;
+  border: 1px solid #1e293b;
+}
+
+#preview {
+  border: 1px solid #1e293b;
+  height: 60%;
+  position: relative;
+  background: #020617;
+}
+
+#props {
+  background: #020617;
+  border: 1px solid #1e293b;
+  margin-top: 10px;
+}
+</style>
+  </div>
+
+</div>
+<script>
+let appModel = JSON.parse(
+  localStorage.getItem("system") || '{"screens":[]}'
+);
+    {
+      name: "Login",
+      components: [
+        { id: "txtUser", type: "TextBox", x: 50, y: 50 },
+        { id: "txtPin", type: "TextBox", x: 50, y: 100 },
+        { id: "btnLogin", type: "Button", x: 50, y: 150 }
+      ]
+    }
+  ]
+};
+
+window.onload = () => {
+  renderTree();
+  selectScreen(appModel.screens[0]);
+
+  // 🔥 AQUÍ VA
+  document.getElementById("preview").onclick = () => {
+    if (selectedElement) {
+      selectedElement.style.outline = "none";
+    }
+
+    selectedComponent = null;
+    selectedElement = null;
+  };
+};
+
+let currentScreen = null;
+// 🔥 VARIABLES GLOBALES
+let selectedComponent = null;
+let selectedElement = null;
+
+function selectScreen(screen) {
+  currentScreen = screen;
+
+  document.getElementById("editor").value =
+    JSON.stringify(screen, null, 2);
+
+  renderPreview();
+
+}
+function renderPreview() {
+  const preview = document.getElementById("preview");
+  preview.innerHTML = "";
+
+  currentScreen.components.forEach(comp => {
+    let el;
+
+    switch (comp.type) {
+      case "TextBox":
+        el = document.createElement("input");
+        break;
+
+      case "Button":
+        el = document.createElement("button");
+        el.innerText = comp.text || comp.id;
+        break;
+
+      case "Label":
+        el = document.createElement("label");
+        el.innerText = comp.text || comp.id;
+        break;
+    }
+
+    el.style.position = "absolute";
+    el.style.left = comp.x + "px";
+    el.style.top = comp.y + "px";
+
+    makeDraggable(el, comp);
+    makeSelectable(el, comp); // 🔥 AQUÍ VA
+
+    preview.appendChild(el);
+  });
+}
+function makeSelectable(el, comp) {
+  el.onclick = (e) => {
+    e.stopPropagation();
+
+    if (selectedElement) {
+      selectedElement.style.outline = "none";
+    }
+
+    selectedComponent = comp;
+    selectedElement = el;
+
+    el.style.outline = "2px solid #00f2ff";
+
+    // 🔥 NUEVO
+    showProperties(comp);
+  };
+}
+function showProperties(comp) {
+  const panel = document.getElementById("props-content");
+
+  panel.innerHTML = `
+    <label>X</label>
+    <input value="${comp.x}" onchange="updateProp('x', this.value)"><br>
+
+    <label>Y</label>
+    <input value="${comp.y}" onchange="updateProp('y', this.value)"><br>
+
+    <label>Width</label>
+    <input value="${comp.width || 100}" onchange="updateProp('width', this.value)"><br>
+
+    <label>Height</label>
+    <input value="${comp.height || 30}" onchange="updateProp('height', this.value)"><br>
+
+    <label>Texto</label>
+    <input value="${comp.text || comp.id}" onchange="updateProp('text', this.value)"><br>
+
+    <button onclick="deleteSelected()">Eliminar</button>
+  `;
+}
+function updateProp(prop, value) {
+  if (!selectedComponent) return;
+
+  // números
+  if (["x","y","width","height"].includes(prop)) {
+    selectedComponent[prop] = parseInt(value) || 0;
+  } else {
+    selectedComponent[prop] = value;
+  }
+
+  renderPreview();
+  syncEditor();
+}
+function deleteSelected() {
+  if (!selectedComponent) return;
+
+  currentScreen.components =
+    currentScreen.components.filter(c => c !== selectedComponent);
+
+  selectedComponent = null;
+  selectedElement = null;
+
+  document.getElementById("props-content").innerHTML = "Selecciona un componente";
+
+  renderPreview();
+  syncEditor();
+}
+function makeDraggable(el, comp) {
+  let offsetX, offsetY;
+
+  el.onmousedown = (e) => {
+    e.stopPropagation(); // 🔥 AGRÉGALO AQUÍ
+
+    offsetX = e.offsetX;
+    offsetY = e.offsetY;
+
+    document.onmousemove = (e) => {
+      let rect = document.getElementById("preview").getBoundingClientRect();
+
+      comp.x = e.clientX - rect.left - offsetX;
+      comp.y = e.clientY - rect.top - offsetY;
+
+      el.style.left = comp.x + "px";
+      el.style.top = comp.y + "px";
+
+      syncEditor();
+    };
+
+    document.onmouseup = () => {
+      document.onmousemove = null;
+    };
+  };
+}
+function syncEditor() {
+  document.getElementById("editor").value =
+    JSON.stringify(currentScreen, null, 2);
+}
+function applyCode() {
+  try {
+    let newData = JSON.parse(
+      document.getElementById("editor").value
+    );
+
+    Object.assign(currentScreen, newData);
+
+    renderPreview();
+  } catch (e) {
+    alert("Error en JSON");
+  }
+}
+function addScreen() {
+  let name = prompt("Nombre de la pantalla");
+
+  appModel.screens.push({
+    name,
+    components: []
+  });
+
+  renderTree();
+}
+function addComponent(type) {
+  currentScreen.components.push({
+    id: type + Date.now(),
+    type,
+    x: 50,
+    y: 50
+  });
+
+  renderPreview();
+  syncEditor();
+}
+function deleteComponent(id) {
+  currentScreen.components =
+    currentScreen.components.filter(c => c.id !== id);
+
+  renderPreview();
+  syncEditor();
+}
+function saveSystem() {
+  localStorage.setItem("builder", JSON.stringify(appModel));
+}
+setInterval(saveSystem, 2000);
+function notifyUsers() {
+  //pusher.trigger("system", "update", appModel);
+}
+/*pusher.bind("update", () => {
+  location.reload();
+});*/
+
+function aiCommand(text) {
+  if (text.includes("agregar botón")) {
+    addComponent("Button");
+  }
+
+  if (text.includes("eliminar textbox")) {
+    let txt = currentScreen.components.find(c => c.type === "TextBox");
+    if (txt) deleteComponent(txt.id);
+  }
+}
+</script>
+</body>
+</html>
