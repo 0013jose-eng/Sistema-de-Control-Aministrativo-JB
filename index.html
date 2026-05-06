@@ -396,13 +396,6 @@ input:focus, select:focus{border-color:var(--accent);}
 #user-form-modal .btn-primary{background:#00bcd4;color:#fff;border:none;padding:10px 22px;border-radius:6px;font-weight:bold;cursor:pointer;font-size:.92rem;}
 #user-form-modal .btn-secondary{background:#2a3340;color:#cdd6e3;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;font-size:.9rem;}
 /* Editor de código */
-.code-editor{width:100%;min-height:340px;background:#0a0e14;color:#a4f8ff;font-family:'Cascadia Code','Fira Code','Consolas',monospace;font-size:.86rem;padding:14px;border:1px solid #1f242c;border-radius:8px;line-height:1.5;tab-size:2;resize:vertical;box-sizing:border-box;}
-.code-editor:focus{outline:none;border-color:#00bcd4;box-shadow:0 0 0 2px rgba(0,188,212,0.15);}
-.code-output{background:#0a0e14;color:#7be39c;font-family:monospace;padding:12px 14px;border-radius:6px;border:1px solid #1f242c;margin-top:10px;min-height:60px;font-size:.85rem;white-space:pre-wrap;max-height:200px;overflow:auto;}
-.code-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
-.code-snippets{background:#11161d;border:1px solid #1f242c;border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:.82rem;color:#8892b0;}
-.code-snippets b{color:#a4f8ff;}
-.code-snippets code{background:#0a0e14;color:#7be39c;padding:1px 5px;border-radius:3px;font-family:monospace;font-size:.82rem;}
 @media (max-width:780px){
   #itmgr-tiles{padding:24px 12px;gap:16px;}
   #itmgr-tiles .rtile{width:140px;height:140px;padding:12px;}
@@ -465,7 +458,7 @@ input:focus, select:focus{border-color:var(--accent);}
 <section id="panel-futurista" class="screen">
   <div class="panel-header" id="panel-header"></div>
   <div class="tiles-row">
-    <div class="tile tile-orange" onclick="dropEffect(this)">
+    <div class="tile tile-orange" onclick="dropEffect(this)" style="display:none !important;">
       <div class="tile-icon"><i class="fa-solid fa-users-rays"></i></div>
       <span id="tile-ia-title"></span><br><span id="tile-ia"></span>
     </div>
@@ -819,10 +812,10 @@ input:focus, select:focus{border-color:var(--accent);}
       <div class="rtitle" data-i18n="itUsersTitle">Gestión de Usuarios</div>
       <div class="rsubtitle" data-i18n="itUsersSub">Crear / Activar / Editar</div>
     </button>
-    <button class="rtile it-editor" onclick="itmgrOpenView('editor')">
-      <div class="ricon"><i class="fa-solid fa-code"></i></div>
-      <div class="rtitle" data-i18n="itEditorTitle">Editor de Interfaz</div>
-      <div class="rsubtitle" data-i18n="itEditorSub">Estilo C# en vivo</div>
+    <button class="rtile it-editor" onclick="openBuilder()">
+      <div class="card" onclick="openBuilder()">
+	  <h3>Editor de Interfaz</h3>
+	</div>
     </button>
     <button class="rtile it-asistencia" onclick="itmgrOpenView('asistencia')" style="background:linear-gradient(135deg,#ff6f91 60%,#a32856 100%);">
       <div class="ricon"><i class="fa-solid fa-headset"></i></div>
@@ -1583,7 +1576,7 @@ function goToPanel() {
 
   // IA de Asistencia tile: only for admins (itmgr or rrhh)
   const iaTile = document.querySelector('.tile.tile-orange');
-  if (iaTile) iaTile.style.display = (perms.itmgr || perms.rrhh) ? '' : 'none';
+ if (iaTile) iaTile.style.display = 'none';
 
   // QA tile: show if the user has any QA sub-permission
   const hasQA = !!(perms.qa && (perms.qa.extractor || perms.qa.weekly || perms.qa.monthly || perms.qa.kpi));
@@ -4680,6 +4673,29 @@ function usrFillFromCodigo() {
     fb.innerHTML = `<div class="feedback err">${_t('codeNotFound')}</div>`;
   }
 }
+function openBuilder() {
+  console.log("CLICK builder");
+
+  const container = document.getElementById("builderContainer");
+
+  if (!container) {
+    console.error("NO EXISTE builderContainer");
+    return;
+  }
+
+  container.style.display = "block";
+
+  fetch("builder.html")
+    .then(res => {
+      console.log("fetch status:", res.status);
+      return res.text();
+    })
+    .then(html => {
+      container.innerHTML = html;
+      console.log("Builder cargado");
+    })
+    .catch(err => console.error(err));
+}
 function saveUser() {
   const fb = document.getElementById('user-form-feedback');
   const codigo = document.getElementById('usr-codigo').value.trim();
@@ -4719,26 +4735,42 @@ function _itRenderEditor() {
   const last = localStorage.getItem('jabm-it-editor-code') || '';
   v.innerHTML = `
     <h3><i class="fa-solid fa-code"></i> <span data-i18n="itEditorTitle">Editor de Interfaz</span></h3>
-    <div class="code-snippets">
-      <div><b data-i18n="itHelpTitle">Snippets de ejemplo</b> — <span data-i18n="itHelpDescribe">Modifica el sistema usando JavaScript. Ejemplos:</span></div>
-      <div style="margin-top:6px;">
-        • Cambiar título: <code>document.title = "Mi Sistema";</code><br>
-        • Cambiar color: <code>document.body.style.background = "#1a1a2e";</code><br>
-        • Ocultar tile: <code>document.getElementById('tile-itmgr').style.display='none';</code><br>
-        • Agregar botón en panel: <code>panel.appendChild(btn)</code>
-      </div>
-    </div>
-    <textarea id="it-code-editor" class="code-editor" spellcheck="false" placeholder="// using SystemJABM;
-// public class LiveUpdate { void Apply() { ... } }
-// JavaScript en vivo:
-console.log('Sistema JABM listo');">${escapeHtml(last)}</textarea>
+  
+
+<div style="display:flex; height:600px; gap:10px;">
+
+  <!-- 🌳 ÁRBOL -->
+  <div style="width:20%; background:#0d1117; border:1px solid #2a3340; border-radius:8px; padding:10px; overflow:auto;">
+    <b>Estructura</b>
+    <ul style="list-style:none;padding-left:10px;">
+      <li onclick="devLoadSaved('login')">🔐 Login
+        <ul>
+          <li onclick="devLoadComponent('user-input')">Usuario</li>
+          <li onclick="devLoadComponent('pin-input')">PIN</li>
+          <li onclick="devLoadComponent('btn-support')">Soporte</li>
+        </ul>
+      </li>
+      <li onclick="devLoadSaved('panel')">📊 Panel</li>
+    </ul>
+  </div>
+
+  <!-- 💻 CÓDIGO -->
+  <div style="width:40%; display:flex; flex-direction:column;">
+    <textarea id="dev-code" class="code-editor"></textarea>
+
     <div class="code-toolbar">
-      <button class="btn-primary" onclick="itApplyCode()"><i class="fa-solid fa-play"></i> <span data-i18n="itEditorRun">Aplicar cambios en vivo</span></button>
-      <button class="btn-warning" onclick="itBroadcastReload()"><i class="fa-solid fa-bullhorn"></i> <span data-i18n="itEditorBroadcast">Notificar a usuarios conectados</span></button>
-      <button class="btn-secondary" onclick="document.getElementById('it-code-editor').value=''"><i class="fa-solid fa-eraser"></i> <span data-i18n="itEditorClear">Limpiar editor</span></button>
+      <button class="btn-primary" onclick="devApply()">Aplicar</button>
+      <button class="btn-secondary" onclick="devReset()">Reset</button>
+      <button class="btn-warning" onclick="devSave()">Guardar</button>
     </div>
-    <div style="margin-top:10px;font-size:.8rem;color:#8892b0;" data-i18n="itEditorOutput">Salida de la consola</div>
-    <pre class="code-output" id="it-code-output"></pre>`;
+  </div>
+
+  <!-- 👁 VISTA -->
+  <div style="width:40%;">
+    <iframe id="dev-preview" style="width:100%;height:100%;border:none;background:white;border-radius:8px;"></iframe>
+  </div>
+
+</div>`;
 }
 function itApplyCode() {
   const code = document.getElementById('it-code-editor').value;
@@ -4800,7 +4832,7 @@ try {
     </div>
   </div>
 </div>
-
+<div id="builderContainer" style="display:none;"></div>
 <script>
 /* =====================================================
    SISTEMA DE ALARMAS — ALMUERZO + SALIDA
@@ -5378,6 +5410,208 @@ function _handleFileAttach(input) {
   document.addEventListener('click', _primeAudio, { once: true });
   document.addEventListener('keydown', _primeAudio, { once: true });
 })();
+// ===============================
+// 🔥 VISUAL DEV PRO + PERSISTENTE
+// ===============================
+
+let devOriginal = "";
+
+// Detecta clave
+function getDevKey(view){
+  return "dev_" + view;
+}
+
+// Cargar guardado
+function devLoadSaved(view){
+
+  const saved = localStorage.getItem(getDevKey(view));
+
+  if(saved){
+    document.getElementById('dev-code').value = saved;
+    devUpdatePreview(saved);
+  }else{
+    devLoadView(view);
+  }
+}
+
+// Cargar vista original
+function devLoadView(view){
+
+  let el;
+
+  if(view === 'login'){
+    el = document.getElementById('screen-login');
+  }
+
+  if(view === 'panel'){
+    el = document.getElementById('panel-futurista');
+  }
+
+  if(!el) return;
+
+  const html = el.outerHTML;
+
+  devOriginal = html;
+
+  document.getElementById('dev-code').value = html;
+  devUpdatePreview(html);
+}
+
+// Componentes
+function devLoadComponent(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+
+  const html = el.outerHTML;
+
+  devOriginal = html;
+
+  document.getElementById('dev-code').value = html;
+  devUpdatePreview(html);
+}
+
+// Aplicar
+function devApply(){
+  const code = document.getElementById('dev-code').value;
+  devUpdatePreview(code);
+}
+
+// Reset
+function devReset(){
+  document.getElementById('dev-code').value = devOriginal;
+  devUpdatePreview(devOriginal);
+}
+
+// Guardar REAL
+function devSave(){
+
+  const code = document.getElementById('dev-code').value;
+
+  let key = "dev_general";
+
+  if(code.includes('screen-login')) key = "dev_login";
+  if(code.includes('panel-futurista')) key = "dev_panel";
+
+  localStorage.setItem(key, code);
+
+  // 🔥 APLICAR AUTOMÁTICAMENTE
+  devApplyToSystem();
+
+  alert("Guardado y aplicado al sistema");
+}
+
+// Vista
+function devUpdatePreview(html){
+
+  const iframe = document.getElementById('dev-preview');
+
+  iframe.srcdoc = `
+    <html>
+    <head>
+      <style>
+        body{font-family:Arial;padding:10px;}
+        *{cursor:move;}
+      </style>
+    </head>
+    <body>${html}</body>
+    </html>
+  `;
+
+  setTimeout(enableDrag, 300);
+}
+
+// Drag visual
+function enableDrag(){
+
+  const iframe = document.getElementById('dev-preview');
+  const doc = iframe.contentDocument;
+
+  let selected = null;
+
+  doc.body.onclick = function(e){
+    e.preventDefault();
+    selected = e.target;
+    selected.style.position = "absolute";
+    selected.style.outline = "2px solid red";
+  };
+
+  doc.body.onmousemove = function(e){
+    if(selected && e.buttons === 1){
+      selected.style.left = e.pageX + 'px';
+      selected.style.top = e.pageY + 'px';
+    }
+  };
+
+  doc.body.onmouseup = function(){
+    selected = null;
+  };
+}
+// ===============================
+// 🧠 MODO SISTEMA REAL
+// ===============================
+
+// Aplica cambios al sistema REAL
+function devApplyToSystem(){
+
+  const code = document.getElementById('dev-code').value;
+
+  let targetId = null;
+
+  if(code.includes('screen-login')) targetId = 'screen-login';
+  if(code.includes('panel-futurista')) targetId = 'panel-futurista';
+
+  if(!targetId){
+    alert("No se pudo identificar el módulo");
+    return;
+  }
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(code, 'text/html');
+  const newEl = doc.body.firstElementChild;
+
+  const current = document.getElementById(targetId);
+
+  if(current && newEl){
+    current.replaceWith(newEl);
+    alert("Aplicado al sistema real");
+  }
+
+}
+<script>
+
+// ...TODO tu código existente (NO LO TOQUES)
+
+
+// ===============================
+// 🔄 CARGAR CAMBIOS GUARDADOS
+// ===============================
+document.addEventListener('DOMContentLoaded', () => {
+
+  const loginSaved = localStorage.getItem('dev_login');
+  const panelSaved = localStorage.getItem('dev_panel');
+
+  if(loginSaved){
+    applySavedDirect('screen-login', loginSaved);
+  }
+
+  if(panelSaved){
+    applySavedDirect('panel-futurista', panelSaved);
+  }
+
+});
+
+function applySavedDirect(id, html){
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  const newEl = doc.body.firstElementChild;
+
+  const current = document.getElementById(id);
+
+  if(current && newEl){
+    current.replaceWith(newEl);
+  }
+}
 </script>
 </body>
 </html>
