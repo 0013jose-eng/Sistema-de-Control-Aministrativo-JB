@@ -1018,7 +1018,67 @@ input:focus, select:focus{border-color:var(--accent);}
     </div>
   </div>
 </div>
+<div id="builder">
 
+  <div class="panel left">
+
+    <h3>Pantallas</h3>
+
+    <div id="tree"></div>
+
+    <button onclick="addScreen()">
+      + Pantalla
+    </button>
+
+    <hr>
+
+    <h3>Componentes</h3>
+
+    <button onclick="addComponent('TextBox')">
+      TextBox
+    </button>
+
+    <button onclick="addComponent('Button')">
+      Button
+    </button>
+
+    <button onclick="addComponent('Label')">
+      Label
+    </button>
+
+  </div>
+
+  <div class="panel center">
+
+    <h3>Código</h3>
+
+    <textarea id="editor"></textarea>
+
+    <button onclick="applyCode()">
+      Aplicar
+    </button>
+
+  </div>
+
+  <div class="panel right">
+
+    <h3>Vista previa</h3>
+
+    <div id="preview"></div>
+
+    <div id="props">
+
+      <h3>Propiedades</h3>
+
+      <div id="props-content">
+        Selecciona un componente
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
 <script>
 // 1. DICCIONARIO Y CONFIGURACIÓN GLOBAL
 const i18n = {
@@ -5613,6 +5673,17 @@ function applySavedDirect(id, html){
   if(current && newEl){
     current.replaceWith(newEl);
   }
+}
+
+function renderTree() {
+  const tree = document.getElementById("tree");
+  tree.innerHTML = "";
+  appModel.screens.forEach(screen => {
+    const btn = document.createElement("button");
+    btn.innerText = screen.name;
+    btn.onclick = () => selectScreen(screen);
+    tree.appendChild(btn);
+  });
 }
 </script>
 </body>
