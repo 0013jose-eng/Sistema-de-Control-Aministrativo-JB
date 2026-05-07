@@ -417,12 +417,73 @@ input:focus, select:focus{border-color:var(--accent);}
 #lunch-dialog input[type=time]{width:100%;padding:10px 12px;background:#1f242c;border:1px solid #2a3340;border-radius:6px;color:#fff;font-size:1rem;box-sizing:border-box;font-family:inherit;}
 #lunch-dialog .ld-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;}
 </style>
+
 <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
+
 </head>
+
 <body>
+<div id="builder">
+
+  <div class="panel left">
+
+    <h3>Pantallas</h3>
+
+    <div id="tree"></div>
+
+    <button onclick="addScreen()">
+      + Pantalla
+    </button>
+
+    <hr>
+
+    <h3>Componentes</h3>
+
+    <button onclick="addComponent('TextBox')">
+      TextBox
+    </button>
+
+    <button onclick="addComponent('Button')">
+      Button
+    </button>
+
+    <button onclick="addComponent('Label')">
+      Label
+    </button>
+
+  </div>
+
+  <div class="panel center">
+
+    <h3>Código</h3>
+
+    <textarea id="editor"></textarea>
+
+    <button onclick="applyCode()">
+      Aplicar
+    </button>
+
+  </div>
+
+  <div class="panel right">
+
+    <h3>Vista previa</h3>
+
+    <div id="preview"></div>
+
+    <div id="props">
+
+      <h3>Propiedades</h3>
+
+      <div id="props-content">
+        Selecciona un componente
+      </div>
+    </div>
+  </div>
+ </div>
 <div style="position: absolute; top: 20px; right: 20px; z-index: 2000;">
-  <select id="lang-select" style="background:#000; color:white; border:1px solid var(--accent); padding:8px; border-radius:5px; font-weight:bold; outline:none;">
+  <select id="lang-select">
     <option value="es">Español</option>
     <option value="en">English</option>
   </select>
@@ -1017,67 +1078,6 @@ input:focus, select:focus{border-color:var(--accent);}
       <button class="wa-btn primary" onclick="createGroup()" data-i18n="create">Crear grupo</button>
     </div>
   </div>
-</div>
-<div id="builder">
-
-  <div class="panel left">
-
-    <h3>Pantallas</h3>
-
-    <div id="tree"></div>
-
-    <button onclick="addScreen()">
-      + Pantalla
-    </button>
-
-    <hr>
-
-    <h3>Componentes</h3>
-
-    <button onclick="addComponent('TextBox')">
-      TextBox
-    </button>
-
-    <button onclick="addComponent('Button')">
-      Button
-    </button>
-
-    <button onclick="addComponent('Label')">
-      Label
-    </button>
-
-  </div>
-
-  <div class="panel center">
-
-    <h3>Código</h3>
-
-    <textarea id="editor"></textarea>
-
-    <button onclick="applyCode()">
-      Aplicar
-    </button>
-
-  </div>
-
-  <div class="panel right">
-
-    <h3>Vista previa</h3>
-
-    <div id="preview"></div>
-
-    <div id="props">
-
-      <h3>Propiedades</h3>
-
-      <div id="props-content">
-        Selecciona un componente
-      </div>
-
-    </div>
-
-  </div>
-
 </div>
 <script>
 // 1. DICCIONARIO Y CONFIGURACIÓN GLOBAL
