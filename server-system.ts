@@ -42,11 +42,11 @@ function publicBase(req: Request): string {
 
   res.send(html);
 });
-router.get("/constructor.html", (req, res) => {
+router.get("/builder.html", (req, res) => {
 
   const builderPath = path.resolve(
     process.cwd(),
-    "../../attached_assets/constructor.html"
+    "builder.html"
   );
 
   if (!fs.existsSync(builderPath)) {
