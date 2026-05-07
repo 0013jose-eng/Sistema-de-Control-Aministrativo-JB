@@ -81,8 +81,9 @@ textarea {
 
 </div>
 <script>
-let appModel = JSON.parse(
-  localStorage.getItem("system") || '{"screens":[]}'
+
+let appModel = {
+  screens: []
 );
     {
       name: "Login",
@@ -95,16 +96,12 @@ let appModel = JSON.parse(
   ]
 };
 
-window.onload = () => {
-  renderTree();
-  selectScreen(appModel.screens[0]);
-
-  // 🔥 AQUÍ VA
+window.onload = async () => {
+  await loadSystem();
   document.getElementById("preview").onclick = () => {
     if (selectedElement) {
       selectedElement.style.outline = "none";
     }
-
     selectedComponent = null;
     selectedElement = null;
   };
@@ -294,10 +291,30 @@ function deleteComponent(id) {
   renderPreview();
   syncEditor();
 }
-function saveSystem() {
-  localStorage.setItem("builder", JSON.stringify(appModel));
+async function saveSystem() {
+
+  try {
+
+    await fetch("/saveBuilder", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(appModel)
+    });
+
+    console.log("Sistema guardado");
+
+  } catch (err) {
+
+    console.error("Error guardando:", err);
+
+  }
+
 }
+
 setInterval(saveSystem, 2000);
+
 function notifyUsers() {
   //pusher.trigger("system", "update", appModel);
 }
@@ -314,6 +331,37 @@ function aiCommand(text) {
     let txt = currentScreen.components.find(c => c.type === "TextBox");
     if (txt) deleteComponent(txt.id);
   }
+}
+async function loadSystem() {
+
+  try {
+
+    const response = await fetch("/loadBuilder");
+
+    appModel = await response.json();
+
+    // Si no hay pantallas
+    if (!appModel.screens.length) {
+
+      appModel.screens.push({
+        name: "Login",
+        components: []
+      });
+
+    }
+
+    renderTree();
+
+    selectScreen(appModel.screens[0]);
+
+    console.log("Builder cargado");
+
+  } catch (err) {
+
+    console.error("Error cargando builder:", err);
+
+  }
+
 }
 </script>
 </body>
