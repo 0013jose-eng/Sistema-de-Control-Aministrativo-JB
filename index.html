@@ -4740,23 +4740,6 @@ function usrFillFromCodigo() {
 function openBuilder() {
   window.open('/builder.html', '_blank');
 }
-  const container = document.getElementById("builderContainer");
-  if (!container) {
-    console.error("NO EXISTE builderContainer");
-    return;
-  }
-  container.style.display = "block";
-  fetch("builder.html")
-    .then(res => {
-      console.log("fetch status:", res.status);
-      return res.text();
-    })
-    .then(html => {
-      container.innerHTML = html;
-      console.log("Builder cargado");
-    })
-    .catch(err => console.error(err));
-}
 function saveUser() {
   const fb = document.getElementById('user-form-feedback');
   const codigo = document.getElementById('usr-codigo').value.trim();
@@ -4893,7 +4876,6 @@ try {
     </div>
   </div>
 </div>
-<div id="builderContainer" style="display:none;"></div>
 <script>
 /* =====================================================
    SISTEMA DE ALARMAS — ALMUERZO + SALIDA
