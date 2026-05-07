@@ -4738,17 +4738,14 @@ function usrFillFromCodigo() {
   }
 }
 function openBuilder() {
-  console.log("CLICK builder");
-
+  window.open('/builder.html', '_blank');
+}
   const container = document.getElementById("builderContainer");
-
   if (!container) {
     console.error("NO EXISTE builderContainer");
     return;
   }
-
   container.style.display = "block";
-
   fetch("builder.html")
     .then(res => {
       console.log("fetch status:", res.status);
