@@ -3790,7 +3790,9 @@ function itmgrOpenView(name) {
   if      (name === 'cache')  _itRenderCache();
   else if (name === 'debug')  _itRenderDebug();
   else if (name === 'users')  _itRenderUsers();
-  else if (name === 'editor') _itRenderEditor();
+  else if (name === 'editor') {
+  window.open('/constructor.html', '_blank');
+}
   else if (name === 'asistencia') _itRenderAsistencia();
   else if (name === 'loginhist')  _itRenderLoginHistory();
   else if (name === 'pinaudit')   _itRenderPinAudit();

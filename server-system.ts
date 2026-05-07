@@ -20,7 +20,6 @@ function publicBase(req: Request): string {
   return proto + "://" + host;
 }
 
-router.get("/system", (req, res) => {
  router.get("/system", (req, res) => {
   if (!fs.existsSync(HTML_PATH)) {
     res.status(404).send("System HTML not found at " + HTML_PATH);
@@ -42,6 +41,24 @@ router.get("/system", (req, res) => {
   res.setHeader("Cache-Control", "no-store");
 
   res.send(html);
+});
+router.get("/constructor.html", (req, res) => {
+
+  const builderPath = path.resolve(
+    process.cwd(),
+    "../../attached_assets/constructor.html"
+  );
+
+  if (!fs.existsSync(builderPath)) {
+
+    return res.status(404).send(
+      "Builder no encontrado"
+    );
+
+  }
+
+  res.sendFile(builderPath);
+
 });
 router.post("/saveBuilder", (req, res) => {
 
