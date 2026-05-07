@@ -83,14 +83,29 @@ textarea {
 <script>
 
 let appModel = {
-  screens: []
-);
+  screens: [
     {
       name: "Login",
       components: [
-        { id: "txtUser", type: "TextBox", x: 50, y: 50 },
-        { id: "txtPin", type: "TextBox", x: 50, y: 100 },
-        { id: "btnLogin", type: "Button", x: 50, y: 150 }
+        {
+          id: "txtUser",
+          type: "TextBox",
+          x: 50,
+          y: 50
+        },
+        {
+          id: "txtPin",
+          type: "TextBox",
+          x: 50,
+          y: 100
+        },
+        {
+          id: "btnLogin",
+          type: "Button",
+          x: 50,
+          y: 150,
+          text: "Login"
+        }
       ]
     }
   ]
